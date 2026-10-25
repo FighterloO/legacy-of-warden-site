@@ -164,8 +164,10 @@ p{margin:0}
 /* Job panel */
 .job{display:grid;gap:16px;background:var(--panel);border:1px solid var(--line);padding:16px}
 @media (min-width:860px){.job{grid-template-columns:260px 1fr;padding:22px}}
-.job-portrait{background:radial-gradient(circle at 50% 40%,var(--jc,#d9ba78) 0%,transparent 70%);display:grid;place-items:center;min-height:220px}
-.job-portrait img{max-height:260px;width:auto}
+/* Soft glow with no box edge; the portrait fades out at the bottom so the cut-off body does not show */
+.job-portrait{position:relative;display:grid;place-items:center;align-self:start;min-height:220px}
+.job-portrait::before{content:"";position:absolute;inset:0;background:radial-gradient(closest-side at 50% 45%,color-mix(in srgb,var(--jc,#d9ba78) 55%,transparent) 0%,color-mix(in srgb,var(--jc,#d9ba78) 18%,transparent) 55%,transparent 100%);pointer-events:none}
+.job-portrait img{position:relative;max-height:280px;width:auto;-webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 96%);mask-image:linear-gradient(180deg,#000 62%,transparent 96%);filter:drop-shadow(0 6px 18px rgba(0,0,0,.45))}
 .job h3{font-size:28px;color:var(--jc,var(--gold-hi))}
 .job-gauge{font-size:13px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
 .job-about{margin-top:10px}
