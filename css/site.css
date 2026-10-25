@@ -189,18 +189,22 @@ p{margin:0}
 /* Card grid: skills and items are literal cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 @media (min-width:700px){.grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}}
-.card{position:relative;text-align:left;background:linear-gradient(180deg,rgba(36,30,54,.94),rgba(20,16,32,.94));background-clip:padding-box;border:10px solid transparent;border-image:url(../img/ui/frame-gold-notch.webp) 52 / 10px / 0 stretch;padding:8px 8px 10px;color:var(--ink);font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:6px;touch-action:manipulation;transition:transform .2s,filter .2s;isolation:isolate}
+.card{--frame:url(../img/ui/frame-gold-notch.webp);position:relative;text-align:left;background:none;border:10px solid transparent;padding:8px 8px 10px;color:var(--ink);font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:7px;touch-action:manipulation;transition:transform .2s,filter .2s;isolation:isolate}
 /* Game card frames by rank: silver for common cards and rites, gold notch for skills and Legendary/Set, gold spike for Mythical and Signatures */
-.card[data-frame=silver]{border-image-source:url(../img/ui/frame-silver.webp)}
-.card[data-frame=spike]{border-image-source:url(../img/ui/frame-gold-spike.webp)}
-/* The element or tier colour glows softly from the top inside the frame */
-.card::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(120% 70% at 50% 0%,color-mix(in srgb,var(--c,#d9ba78) 30%,transparent),transparent 70%);pointer-events:none}
+.card[data-frame=silver]{--frame:url(../img/ui/frame-silver.webp)}
+.card[data-frame=spike]{--frame:url(../img/ui/frame-gold-spike.webp)}
+/* The frame is its own top layer, so the card face can never cover it */
+.card::after{content:"";position:absolute;inset:-10px;z-index:1;pointer-events:none;border:10px solid transparent;border-image:var(--frame) 52 / 10px / 0 stretch}
+/* The card face: corners cut to sit inside the frame's notches; the element or tier colour glows from the top */
+.card::before{content:"";position:absolute;inset:-2px;z-index:-1;pointer-events:none;
+  background:radial-gradient(120% 65% at 50% 0%,color-mix(in srgb,var(--c,#d9ba78) 28%,transparent),transparent 72%),linear-gradient(180deg,#251e38,#130f20);
+  clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px)}
 .card:hover{transform:translateY(-3px);filter:brightness(1.12) drop-shadow(0 6px 14px color-mix(in srgb,var(--c,#d9ba78) 35%,transparent))}
-.card-top{display:flex;gap:10px;align-items:center}
-.card img{width:52px;height:52px;flex:none;object-fit:contain}
-.card b{font-size:15px;line-height:1.2;display:block}
-.card small{display:block;font-size:12px;color:var(--c,var(--mute));text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
-.card p{font-size:13px;color:var(--mute);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-top{display:flex;gap:10px;align-items:center;padding-bottom:8px;border-bottom:1px solid transparent;border-image:linear-gradient(90deg,transparent,color-mix(in srgb,var(--c,#d9ba78) 60%,transparent),transparent) 1}
+.card img{width:52px;height:52px;flex:none;object-fit:contain;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c,#d9ba78) 45%,transparent))}
+.card b{font-family:var(--serif);font-size:16px;line-height:1.2;display:block;color:#f4ead2}
+.card small{display:block;font-size:11px;font-weight:700;color:var(--c,var(--mute));text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.card p{font-size:13px;color:#b9b2c9;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .more{grid-column:1/-1;justify-self:center;margin-top:6px}
 
 /* Platforms and release */
@@ -208,20 +212,39 @@ p{margin:0}
 @media (min-width:760px){.platforms{grid-template-columns:repeat(3,1fr)}}
 .platform{background:var(--panel);border:1px solid var(--line);padding:16px}
 .platform p{color:var(--mute);margin-top:6px}
-.release{display:grid;gap:16px}
-@media (min-width:860px){.release{grid-template-columns:1fr 1.25fr}}
-.offer{position:relative;background:var(--panel);border:1px solid var(--line-gold);padding:20px;overflow:hidden}
-.offer>*{position:relative}
-.offer-art{position:absolute!important;inset:0;width:100%;height:100%;object-fit:cover;opacity:.22}
-.offer-dlc{border-color:#8a2a3a;background:linear-gradient(160deg,#2a0f18,var(--panel) 70%)}
-.offer-dlc h3{color:#ff8f8f}
-.offer-price{font-family:var(--serif);font-size:30px;color:var(--gold-hi)}
-.offer-price span{font-family:var(--sans);font-size:14px;color:var(--mute);margin-left:6px}
-.offer h3{font-size:22px;margin-top:4px}
+.release{display:grid;gap:22px;align-items:stretch}
+@media (min-width:860px){.release{grid-template-columns:1fr 1.15fr}}
+/* Offer cards wear the game frame on a top layer: gold for the free game, a blood-red recolour for Bloodmoon */
+.offer{--frame:url(../img/ui/frame-gold-notch.webp);position:relative;display:flex;flex-direction:column;isolation:isolate;transition:transform .25s}
+.offer::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border:14px solid transparent;border-image:var(--frame) 52 / 14px / 0 stretch}
+.offer::before{content:"";position:absolute;inset:8px;z-index:-1;background:linear-gradient(180deg,#231b36,#120e1e);clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)}
+.offer:hover{transform:translateY(-4px)}
+.offer-head{position:relative;margin:12px 12px 0;aspect-ratio:16/7;overflow:hidden}
+.offer-head img{width:100%;height:100%;object-fit:cover;transition:transform 6s ease-out}
+.offer:hover .offer-head img{transform:scale(1.06)}
+.offer-head::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,#231b36 100%)}
+.offer-tag{position:absolute;z-index:1;top:10px;left:10px;padding:4px 10px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1c1408;background:linear-gradient(180deg,#f1d9a0,#c79d55)}
+.offer-body{position:relative;padding:4px 30px 30px;margin-top:-34px;z-index:1}
+.offer-price{font-family:var(--serif);font-size:clamp(34px,6vw,46px);line-height:1;color:var(--gold-hi);text-shadow:0 2px 14px rgba(0,0,0,.8)}
+.offer-price span{display:block;margin-top:6px;font-family:var(--sans);font-size:13px;letter-spacing:.06em;color:var(--mute);text-shadow:none}
+.offer h3{font-size:24px;margin-top:10px}
 .offer-note{color:var(--mute);margin-top:6px;font-size:15px}
-.offer ul{margin:14px 0 0;padding-left:18px}
-.offer li{margin:4px 0}
-.offer li::marker{color:var(--gold)}
+.offer-list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
+.offer-list li{position:relative;padding-left:20px;line-height:1.45}
+.offer-list li::before{content:"";position:absolute;left:2px;top:.5em;width:7px;height:7px;background:var(--gold);transform:rotate(45deg);box-shadow:0 0 8px rgba(241,217,160,.6)}
+/* Bloodmoon */
+.offer-dlc .offer-tag{color:#fff;background:linear-gradient(180deg,#e0404f,#8a1424)}
+.offer-dlc::after{filter:hue-rotate(-38deg) saturate(1.7) brightness(.85)}
+.offer-dlc::before{background:linear-gradient(180deg,#2c0f1a,#140810)}
+.offer-dlc .offer-head::after{background:linear-gradient(180deg,rgba(80,0,20,.25) 0%,transparent 40%,#2c0f1a 100%)}
+.offer-dlc .offer-head img{filter:hue-rotate(-30deg) saturate(1.3)}
+.offer-dlc h3{color:#ff8f8f}
+.offer-dlc .offer-price{color:#ffd9c2}
+.offer-dlc .offer-list li::before{background:#ff5a6a;box-shadow:0 0 8px rgba(255,70,90,.7)}
+.blood-moon{position:absolute;z-index:1;top:14%;right:12%;width:clamp(54px,12vw,86px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 38% 35%,#ffb0a0,#d8263a 45%,#5a0614 80%);box-shadow:0 0 40px 10px rgba(220,30,50,.55),0 0 90px 30px rgba(160,10,30,.35);animation:moon 5s ease-in-out infinite}
+@keyframes moon{50%{box-shadow:0 0 52px 14px rgba(230,40,60,.7),0 0 120px 40px rgba(170,10,30,.45)}}
+.offer-jobs{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.offer-jobs span{padding:5px 12px;font-family:var(--serif);font-size:15px;color:#ffe2d6;border:1px solid #8a2a3a;background:linear-gradient(180deg,rgba(150,20,40,.35),rgba(60,8,18,.5))}
 .fine{color:var(--mute);font-size:13px;margin-top:14px}
 
 /* Footer */
