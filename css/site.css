@@ -389,3 +389,8 @@ p{margin:0}
 .d-talent p{margin-top:2px;color:#c3bcd2;font-size:13px}
 /* Posters with the title logo in the middle: the play mark sits below it */
 .yt-titled .yt-play{top:78%}
+/* Both cards in a video row share one height: the caption area fills the rest, so the bottoms line up */
+.combo-pair{align-items:stretch}
+.combo-pair .overview{display:flex;flex-direction:column}
+.combo-pair .overview figcaption{flex:1;display:flex;flex-direction:column;align-items:flex-start}
+.combo-pair .overview .yt-link{margin-top:auto;padding-top:6px}
