@@ -425,3 +425,4 @@ p{margin:0}
 .tkind{font:700 11px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--dc,var(--jc))}
 .tdetail b{display:block;margin-top:2px;font-family:var(--serif);font-size:20px;color:#f4ead2}
 .tdetail p:last-child{margin-top:4px;font-size:14px;color:#d6d1e2}
+.chip-icon{width:18px;height:18px;flex:none;filter:drop-shadow(0 0 4px rgba(0,0,0,.6))}

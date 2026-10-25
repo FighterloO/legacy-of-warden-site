@@ -181,7 +181,7 @@ document.querySelectorAll('video').forEach(v => v.addEventListener('play', () =>
 // ---- Chips --------------------------------------------------------------------------------------------------------------
 function chips(root, options, onChange) {
   root.innerHTML = options.map((o, i) =>
-    `<button type="button" class="chip" data-v="${esc(o.v)}" aria-pressed="${i === 0}">${o.c ? `<i style="--c:${o.c}"></i>` : ''}${esc(o.t)}</button>`).join('');
+    `<button type="button" class="chip" data-v="${esc(o.v)}" aria-pressed="${i === 0}">${o.icon ? `<img class="chip-icon" src="${o.icon}" alt="">` : o.c ? `<i style="--c:${o.c}"></i>` : ''}${esc(o.t)}</button>`).join('');
   root.addEventListener('click', e => {
     const b = e.target.closest('.chip');
     if (!b) return;
@@ -371,7 +371,7 @@ function skillsSection(skills, jobs) {
         ${s.talents.map((t, i) => `<div class="d-talent" style="--t:${TALENT_COLOR[i]}"><b><span>Lv ${t.level}</span>${esc(t.name)}<em>+${t.charge} Charge</em></b><p>${esc(t.text)}</p></div>`).join('')}</div>`
         : `<p class="d-note">${s.kind === 'Signature' ? 'A Signature skill: the heart of its job, shaped by the job tree rather than talents.' : 'Rites have no talents: they shape the casts around them.'}</p>`}</div>`,
   });
-  chips($('#skill-el'), [{ v: 'all', t: 'All elements' }, ...els.map(e => ({ v: e, t: EL[e], c: elColor(e) }))], v => { f.el = v; g.reset(); });
+  chips($('#skill-el'), [{ v: 'all', t: 'All elements' }, ...els.map(e => ({ v: e, t: EL[e], icon: `img/el/${e}.svg` }))], v => { f.el = v; g.reset(); });
   chips($('#skill-kind'), [{ v: 'all', t: 'All kinds' }, { v: 'Skill', t: 'Skills' }, { v: 'Rite', t: 'Rites' }, { v: 'Ward', t: 'Ward rites' }, { v: 'Signature', t: 'Signatures' }], v => { f.kind = v; g.reset(); });
   $('#skill-q').addEventListener('input', e => { f.q = e.target.value.trim().toLowerCase(); g.reset(); });
   g.render();
