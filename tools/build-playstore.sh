@@ -88,7 +88,7 @@ if [[ " $* " == *" --videos "* ]]; then
   }
   enc overview-pc 1280 27 60
   enc overview-phone 720 28 60
-  enc combo-landscape 1280 27 44
+  enc combo-landscape 1280 27 43
   enc combo-portrait 720 28 36
 fi
 
