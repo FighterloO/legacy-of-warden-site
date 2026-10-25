@@ -47,11 +47,12 @@ and push; Pages updates in a minute or two.
 - In-game previews and the Google Play set: `bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>"` reads the Godot
   captures in `<preview folder>/godot-capture/{landscape,portrait,landscape-pc}`, writes `<preview folder>/playstore-final/`
   (icon, feature graphic, phone, phone-captioned, tablet-7, tablet-10, pc) and refreshes `img/shots/`. Captions: `SHOTS` in `js/site.js`.
-- Videos: the overview plays from the site (`media/overview-pc.mp4` / `overview-phone.mp4`, picked by screen orientation;
-  `--videos` on `tools/build-playstore.sh` re-encodes them from `<preview folder>/playstore-final/video/`). The two combo
-  videos are YouTube embeds: the `data-yt` id on each `button.yt` in `index.html`, with a local poster (`media/combo-*.webp`);
-  the player loads only on click, from youtube-nocookie.com. YouTube links: trailer UXdxQr5TOxw, trailer Shorts yTMTXW3Ryb0,
-  Spellblade aBvcbKpanhw, Alchemist Shorts v32cvDzky3Y.
+- Videos: the trailer shows both cuts side by side, from the site: `media/overview-pc.mp4` (autoplays muted) and
+  `media/overview-phone.mp4` (`--videos` on `tools/build-playstore.sh` re-encodes them from
+  `<preview folder>/playstore-final/video/`). The two combo videos are YouTube embeds: the `data-yt` id on each
+  `button.yt` in `index.html`, with a local poster (`media/combo-*.webp`); the player loads only on click, from
+  youtube-nocookie.com. YouTube: trailer UXdxQr5TOxw, trailer Short yTMTXW3Ryb0, Spellblade aBvcbKpanhw, Alchemist Short v32cvDzky3Y.
+- Platforms: `img/devices/{phone,tablet,pc}.webp` are the phone, tablet and PC captures shown in the CSS device frames.
 - Release and DLC text: the `#release` section of `index.html`.
 
 ## Publish on GitHub Pages

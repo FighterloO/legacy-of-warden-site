@@ -161,35 +161,11 @@ $('#planes-list').innerHTML = PLANES.map((n, i) =>
 $('#links').innerHTML = LINKS.filter(l => l.url).map(l => `<a href="${esc(l.url)}" rel="noopener">${esc(l.label)}</a>`).join('') ||
   '<span class="fine" style="margin:0">Store page coming soon.</span>';
 
-// Videos with a PC and a phone cut follow the screen: portrait plays the phone cut, landscape the PC cut. A poster with
-// the same name as the file (.webp) is used when it exists. A video whose files are not uploaded yet hides itself.
-(function orientVideos() {
-  const vids = [...document.querySelectorAll('video.orient')];
-  if (!vids.length) return;
-  const portrait = matchMedia('(orientation: portrait)');
-  function pick(v) {
-    const phone = portrait.matches;
-    const src = phone ? v.dataset.phone : v.dataset.pc;
-    if (v.getAttribute('src') === src) return;
-    const t = v.currentTime || 0, playing = !v.paused;
-    v.closest('figure').classList.toggle('is-phone', phone);
-    v.poster = src.replace(/\.mp4$/, '.webp');
-    v.src = src;
-    v.addEventListener('loadedmetadata', () => { try { v.currentTime = t; } catch (e) {} if (playing) v.play().catch(() => {}); }, { once: true });
-  }
-  vids.forEach(v => {
-    v.addEventListener('error', () => {
-      const other = portrait.matches ? v.dataset.pc : v.dataset.phone;
-      if (v.dataset.tried !== other) { v.dataset.tried = other; v.poster = other.replace(/\.mp4$/, '.webp'); v.src = other; }
-      else v.closest('figure').hidden = true;
-    });
-    if (reduced) v.removeAttribute('autoplay');
-    pick(v);
-    // Autoplaying videos (the overview) pause while off screen.
-    if (v.hasAttribute('autoplay')) new IntersectionObserver(([e]) => { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }).observe(v);
-  });
-  portrait.addEventListener('change', () => vids.forEach(pick));
-})();
+// The landscape trailer autoplays muted, and pauses while it is off screen.
+document.querySelectorAll('video.trailer-video[autoplay]').forEach(v => {
+  if (reduced) { v.removeAttribute('autoplay'); return; }
+  new IntersectionObserver(([e]) => { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }).observe(v);
+});
 
 // Combo videos live on YouTube. Only the local poster shows until the viewer presses play; then the privacy-enhanced
 // player (youtube-nocookie) is loaded in its place, so the page makes no YouTube request before that.
@@ -204,15 +180,6 @@ document.querySelectorAll('button.yt').forEach(b => b.addEventListener('click', 
   b.replaceWith(f);
 }));
 
-// The overview's YouTube link follows the screen: the Shorts cut in portrait, the trailer in landscape.
-(function trailerLink() {
-  const a = $('#trailer-yt');
-  if (!a) return;
-  const portrait = matchMedia('(orientation: portrait)');
-  const set = () => { a.href = portrait.matches ? a.dataset.phone : a.dataset.pc; };
-  portrait.addEventListener('change', set);
-  set();
-})();
 
 // Only one video plays at a time.
 document.querySelectorAll('video').forEach(v => v.addEventListener('play', () =>
