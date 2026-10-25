@@ -31,6 +31,17 @@ ff -i "$GODOT/godot/assets/menu/warden-menu-bg.webp" -i "$GODOT/godot/assets/men
   "[0]scale=1024:-1,crop=1024:500:0:(ih-500)/2-20,eq=brightness=-0.10:saturation=1.05,vignette=PI/3.6[bg];[1]scale=560:-1[logo];[bg][logo]overlay=(W-w)/2:(H-h)/2-6" \
   -frames:v 1 "$OUT/feature-1024x500.png"
 
+# 2b. Feature graphic without the title (Google Play Games on PC lays its own logo over it).
+ff -i "$GODOT/godot/assets/menu/warden-menu-bg.webp" -vf \
+  "scale=1024:-1,crop=1024:500:0:(ih-500)/2-20,eq=brightness=-0.06:saturation=1.05,vignette=PI/4.2" \
+  -frames:v 1 "$OUT/feature-1024x500-notitle.png"
+
+# 2c. Play Games (PC) game-card logo: transparent 600 x 400, the title logo with padding and a soft dark glow
+#     so it reads on dark and bright art.
+ff -f lavfi -i "color=c=black@0:s=600x400,format=rgba" -i "$GODOT/godot/assets/menu/title-logo.webp" -filter_complex \
+  "[1]format=rgba,scale=540:-1[logo];[logo]split[l1][l2];[l2]geq=r=0:g=0:b=0:a='if(gt(alpha(X,Y),200),150,0)',boxblur=8:2[glow];[0][glow]overlay=(W-w)/2:(H-h)/2+5[g];[g][l1]overlay=(W-w)/2:(H-h)/2,format=rgba" \
+  -frames:v 1 "$OUT/pc-logo-600x400.png"
+
 n=0
 for name in "${ORDER[@]}"; do
   n=$((n + 1)); num=$(printf "%02d" $n)
