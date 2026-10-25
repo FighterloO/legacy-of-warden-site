@@ -13,7 +13,7 @@ if (!fs.existsSync(path.join(GAME, 'src', 'game', 'engine.js'))) {
   process.exit(1);
 }
 const req = f => require(path.join(GAME, 'src', 'game', f));
-const G = req('engine.js'), P = req('progression.js'), J = req('jobs.js'), F = req('forbidden-arts.js'), T = req('talents.js');
+const G = req('engine.js'), P = req('progression.js'), J = req('jobs.js'), F = req('forbidden-arts.js'), T = req('talents.js'), Q = req('quest-system.js');
 const M = P.MYTHIC;
 
 // Copies one game asset to img/<sub>/<name> and returns the site path.
@@ -135,7 +135,20 @@ const jobs = J.JOBS.map(j => {
     signature: node(byN(2)),
     capstones: J.CAPS.map(n => node(byN(n))),
     nodes: j.nodes.filter(n => n.n !== 2 && !J.CAPS.includes(n.n)).map(node),
+    // The whole tree for the site's tree view: node number, the game's edges, the two roads and the capstones.
+    tree: j.nodes.map(n => ({ ...node(n), n: n.n })),
+    edges: J.EDGES, roads: J.ROUTES, caps: J.CAPS,
     art: fa ? { id: fa.id, name: fa.name, short: fa.short, text: fa.text, lore: fa.lore, color: fa.color, gauge: fa.gauge } : null,
+  };
+});
+
+// ---- Planes: numbers from progression.js, rules (effects) from quest-system.js -------------------------------------
+const planes = P.PLANES.map((p, i) => {
+  const rule = Q.PLANE_RULES[i] || {};
+  return {
+    id: p.id, name: p.name, subtitle: p.subtitle, color: p.color, lore: p.lore,
+    hp: p.hp, armour: p.armour, resist: Math.round((0.3 + p.resistance) * 100), loot: p.reward,
+    effects: (rule.effects || []).map(([name, text]) => ({ name, text })),
   };
 });
 
@@ -158,6 +171,7 @@ write('items.json', items);
 write('sets.json', sets);
 write('jobs.json', jobs);
 write('stats.json', stats);
+write('planes.json', planes);
 
 // Remove art that the data no longer points at (only inside the generated folders).
 for (const sub of ['skills', 'items', 'nodes', 'jobs']) {

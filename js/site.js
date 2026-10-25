@@ -18,7 +18,6 @@ const SHOTS = [
   ['07-realm-map', 'Map of the Realm', 'One island, many regions, thirty bosses.'],
   ['08-ritual-duel', 'Ritual Duel', 'Your own spells, played as cards against rival Wardens.'],
 ];
-const PLANES = ['The Verdant Reach', 'Sands of the Eclipse', 'The Astral Glacier', 'Emberfall Dominion', 'Crown of the Void', 'The Scarlet Rift'];
 const EL = { fire: 'Fire', ice: 'Ice', lightning: 'Lightning', chaos: 'Chaos', physical: 'Physical', ward: 'Ward' };
 const TIER_COLOR = ['#b8c4cc', '#82d997', '#c19aff', '#ffa64d', '#e86ad6', '#ff6a3d'];
 // Talent tier colours, as in the game (talents.js RARITIES).
@@ -158,8 +157,6 @@ watchReveal(document);
   new IntersectionObserver(([e]) => e.isIntersecting ? auto() : clearInterval(timer)).observe(stage);
 })();
 document.documentElement.classList.remove('no-js');
-$('#planes-list').innerHTML = PLANES.map((n, i) =>
-  `<li><img src="img/art/plane-wide-${i + 1}.webp" alt="" loading="lazy"><span><small>Plane ${i + 1}</small>${esc(n)}</span></li>`).join('');
 $('#links').innerHTML = LINKS.filter(l => l.url).map(l => `<a href="${esc(l.url)}" rel="noopener">${esc(l.label)}</a>`).join('') ||
   '<span class="fine" style="margin:0">Store page coming soon.</span>';
 
@@ -243,8 +240,9 @@ function cardGrid({ grid, count, noun, list, match, card, detail }) {
 // ---- Data -----------------------------------------------------------------------------------------------------------------
 // no-cache: the browser re-checks the file with the server, so new data shows right after a push.
 const load = f => fetch('data/' + f, { cache: 'no-cache' }).then(r => r.json());
-Promise.all(['skills.json', 'items.json', 'sets.json', 'jobs.json', 'stats.json'].map(load)).then(([skills, items, sets, jobs, stats]) => {
+Promise.all(['skills.json', 'items.json', 'sets.json', 'jobs.json', 'stats.json', 'planes.json'].map(load)).then(([skills, items, sets, jobs, stats, planes]) => {
   heroStats(stats);
+  planesSection(planes);
   jobsSection(jobs);
   skillsSection(skills, jobs);
   itemsSection(items, sets, jobs);
@@ -259,11 +257,50 @@ function heroStats(s) {
 }
 
 // ---- Jobs -----------------------------------------------------------------------------------------------------------------
+// ---- Planes: a rail of six, one open at a time with its board, numbers and effects --------------------------------------
+function planesSection(planes) {
+  const rail = $('#plane-rail'), view = $('#plane-view');
+  // A board capture per plane (img/planes/) when it exists, else the plane's art.
+  rail.innerHTML = planes.map((p, i) => `<button type="button" role="tab" class="plane-tab" data-p="${i}" aria-selected="${i === 0}" style="--pc:${p.color}">
+    <img src="img/art/plane-wide-${p.id}.webp" alt="" loading="lazy"><span><small>Plane ${p.id}</small>${esc(p.name)}</span></button>`).join('');
+  function show(i) {
+    const p = planes[i];
+    rail.querySelectorAll('.plane-tab').forEach((t, k) => t.setAttribute('aria-selected', k === i));
+    view.style.setProperty('--pc', p.color);
+    view.innerHTML = `
+      <div class="plane-shot"><img src="img/planes/plane-${p.id}.webp" alt="The expedition board on ${esc(p.name)}"></div>
+      <div class="plane-info">
+        <p class="plane-kicker">Plane ${p.id} · 25 Guardians</p>
+        <h3>${esc(p.name)}</h3>
+        <p class="plane-sub">${esc(p.subtitle)}</p>
+        <div class="plane-stats">
+          <span><b>×${p.hp}</b>Guardian HP</span><span><b>×${p.armour}</b>Armour</span><span><b>${p.resist}%</b>Resist</span><span><b>×${p.loot}</b>Loot</span>
+        </div>
+        <div class="plane-fx">${p.effects.map((e, k) => `<button type="button" class="plane-chip" data-k="${k}" aria-pressed="${k === 0}">${esc(e.name)}</button>`).join('')}</div>
+        <p class="plane-fx-text" aria-live="polite">${esc(p.effects[0] ? p.effects[0].text : '')}</p>
+      </div>`;
+    const img = view.querySelector('.plane-shot img');
+    img.addEventListener('error', () => { img.src = `img/art/plane-wide-${p.id}.webp`; }, { once: true });
+    const text = view.querySelector('.plane-fx-text');
+    view.querySelector('.plane-fx').addEventListener('click', e => {
+      const c = e.target.closest('.plane-chip');
+      if (!c) return;
+      view.querySelectorAll('.plane-chip').forEach(x => x.setAttribute('aria-pressed', x === c));
+      text.textContent = p.effects[+c.dataset.k].text;
+    });
+  }
+  rail.addEventListener('click', e => { const t = e.target.closest('[data-p]'); if (t) show(+t.dataset.p); });
+  show(0);
+}
+
+// ---- Jobs: the game's job tree, every node clickable ---------------------------------------------------------------------
+// Node positions copy the Training Camp tree: core and Signature on the left, road A on top (3, 5, 7), road B at the
+// bottom (4, 6, 8), the shared nodes 9 and 10 in the middle, and the Forbidden Art at the end.
+const TREE_POS = { 1: [7, 50], 2: [21, 50], 3: [35, 15], 5: [51, 15], 7: [67, 15], 4: [35, 85], 6: [51, 85], 8: [67, 85], 9: [49, 50], 10: [63, 50], art: [87, 50] };
 function jobsSection(jobs) {
   const tabs = $('#job-tabs'), panel = $('#job-panel');
   tabs.innerHTML = jobs.map((j, i) =>
     `<button type="button" class="tab" role="tab" data-j="${i}" aria-selected="${i === 0}"><img src="${j.icon}" alt="">${esc(j.name)}</button>`).join('');
-  const node = (n, cls = '') => n ? `<div class="node ${cls}"><img src="${n.img}" alt="" loading="lazy"><div><b>${esc(n.name)}</b><span>${esc(n.text)}</span></div></div>` : '';
   function show(i) {
     const j = jobs[i];
     tabs.querySelectorAll('.tab').forEach((t, k) => t.setAttribute('aria-selected', k === i));
@@ -272,17 +309,43 @@ function jobsSection(jobs) {
     const sec = $('#jobs');
     sec.dataset.bg = 'img/bg/job-' + j.id + '.webp';
     if (bdUrl && bdUrl.includes('/job-')) setBackdrop(sec.dataset.bg);
+    const edges = [...j.edges, ...j.caps.map(c => [c, 'art'])];
+    const line = ([a, b]) => { const [x1, y1] = TREE_POS[a], [x2, y2] = TREE_POS[b]; return `<line data-a="${a}" data-b="${b}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; };
+    const kind = n => n.n === 2 ? 'sig' : j.caps.includes(n.n) ? 'cap' : 'node';
     panel.innerHTML = `
-      <div class="job-portrait"><img src="${j.portrait}" alt="${esc(j.name)}" loading="lazy"></div>
-      <div>
+      <div class="job-side">
+        <div class="job-portrait"><img src="${j.portrait}" alt="${esc(j.name)}" loading="lazy"></div>
         <h3>${esc(j.name)}</h3>
-        <p class="job-gauge">Gauge: ${esc(j.gauge)}</p>
-        <p class="job-about">${esc(j.about)}</p>
-        <p class="job-lore">${esc(j.lore)}</p>
-        <div class="job-block"><h4>Signature skill</h4><div class="nodes">${node(j.signature, 'node-sig')}</div></div>
-        <div class="job-block"><h4>Capstones</h4><div class="nodes">${j.capstones.map(n => node(n)).join('')}</div></div>
-        ${j.art ? `<div class="job-block"><h4>Forbidden Art</h4><div class="art-card" style="--ac:${j.art.color}"><b>${esc(j.art.name)}</b><p>${esc(j.art.text)}</p><i>${esc(j.art.lore)}</i></div></div>` : ''}
+        <p class="job-gauge">${esc(j.gauge)} gauge</p>
+        <p class="job-focus">${esc(j.focus)}</p>
+      </div>
+      <div class="job-main">
+        <div class="tree">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${edges.map(line).join('')}</svg>
+          ${j.tree.map(n => `<button type="button" class="tnode t-${kind(n)}" data-n="${n.n}" style="left:${TREE_POS[n.n][0]}%;top:${TREE_POS[n.n][1]}%" aria-label="${esc(n.name)}"><img src="${n.img}" alt=""><i>${n.n}</i></button>`).join('')}
+          ${j.art ? `<button type="button" class="tnode t-art" data-n="art" style="left:${TREE_POS.art[0]}%;top:${TREE_POS.art[1]}%;--ac:${j.art.color}" aria-label="${esc(j.art.name)}"><span></span></button>` : ''}
+        </div>
+        <div class="tdetail" aria-live="polite"></div>
       </div>`;
+    const detail = panel.querySelector('.tdetail');
+    const roadsOf = n => n === 'art' ? Object.keys(j.roads) : Object.keys(j.roads).filter(r => j.roads[r].includes(n));
+    function pick(n) {
+      panel.querySelectorAll('.tnode').forEach(b => b.classList.toggle('on', b.dataset.n === String(n)));
+      // Light the road(s) the node sits on; a capstone or the Forbidden Art also lights the way to the Art.
+      const lit = new Set(roadsOf(n).flatMap(r => j.roads[r].map(String)));
+      if (n === 'art' || j.caps.includes(n)) lit.add('art');
+      panel.querySelectorAll('.tree line').forEach(l => l.classList.toggle('lit', lit.has(l.dataset.a) && lit.has(l.dataset.b)));
+      if (n === 'art') {
+        detail.style.setProperty('--dc', j.art.color);
+        detail.innerHTML = `<p class="tkind">Forbidden Art</p><b>${esc(j.art.name)}</b><p>${esc(j.art.short)}</p>`;
+      } else {
+        const node = j.tree.find(x => x.n === n), k = kind(node);
+        detail.style.setProperty('--dc', 'var(--jc)');
+        detail.innerHTML = `<p class="tkind">${k === 'sig' ? 'Signature skill' : k === 'cap' ? 'Capstone' : 'Node ' + node.n}</p><b>${esc(node.name)}</b><p>${esc(node.text)}</p>`;
+      }
+    }
+    panel.querySelector('.tree').addEventListener('click', e => { const b = e.target.closest('.tnode'); if (b) pick(b.dataset.n === 'art' ? 'art' : +b.dataset.n); });
+    pick(2);
   }
   tabs.addEventListener('click', e => { const t = e.target.closest('[data-j]'); if (t) show(+t.dataset.j); });
   show(0);

@@ -53,6 +53,9 @@ and push; Pages updates in a minute or two.
   A video hosted on the site itself (like `media/hero-loop.mp4`) must be H.264 with `-pix_fmt yuv420p`: Godot captures come
   out as 4:4:4, which most browsers refuse ("file is corrupt"). Example:
   `ffmpeg -i in.mp4 -c:v libx264 -pix_fmt yuv420p -crf 27 -preset slow -vf scale=1280:-2 -an -movflags +faststart out.mp4`.
+- Planes: `data/planes.json` (numbers from progression.js, effects from quest-system.js PLANE_RULES). A board shot per plane
+  goes in `img/planes/plane-1.webp` … `plane-6.webp` (1280 x 720); a missing one falls back to the plane art.
+- Jobs: `data/jobs.json` carries the whole tree (`tree`, `edges`, `roads`, `caps`); node positions are `TREE_POS` in `js/site.js`.
 - Platforms: `img/devices/{phone,tablet,pc}.webp` are the phone, tablet and PC captures shown in the CSS device frames.
 - Release and DLC text: the `#release` section of `index.html`.
 
