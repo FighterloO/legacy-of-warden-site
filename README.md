@@ -47,7 +47,7 @@ and push; Pages updates in a minute or two.
 - In-game previews and the Google Play set: `bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>"` reads the Godot
   captures in `<preview folder>/godot-capture/{landscape,portrait,landscape-pc}`, writes `<preview folder>/playstore-final/`
   (icon, feature graphic, phone, phone-captioned, tablet-7, tablet-10, pc) and refreshes `img/shots/`. Captions: `SHOTS` in `js/site.js`.
-- Videos: `media/overview-pc.mp4` + `overview-phone.mp4` (picked by screen orientation), `media/combo-landscape.mp4` and `combo-portrait.mp4` (a missing file hides its slot). Each needs a `.webp` poster with the same name. Keep each under ~10 MB: `ffmpeg -i in.mp4 -c:v libx264 -crf 27 -preset slow -vf scale=1280:-2 -c:a aac -b:a 128k -movflags +faststart out.mp4`.
+- Videos: the source files live in `<preview folder>/playstore-final/video/` (overview-pc, overview-phone, combo-landscape, combo-portrait). `bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>" --videos` re-encodes them into `media/` (about 4-11 MB each) with posters. The overview picks the PC or phone cut by screen orientation; a missing combo file hides its slot. Run `--videos` only when no Godot capture is running (RAM).
 - Release and DLC text: the `#release` section of `index.html`.
 
 ## Publish on GitHub Pages
