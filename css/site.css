@@ -430,3 +430,15 @@ p{margin:0}
 
 .tnode:focus{outline:none}
 .tnode:focus-visible img{filter:drop-shadow(0 0 10px var(--gold))}
+
+/* Splash: the logo on a dark field while the first screen loads (at most ~1.5 s), then a fade. */
+.splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:radial-gradient(50% 40% at 50% 45%,rgba(241,217,160,.14),transparent 70%),#0c0a14;transition:opacity .6s ease,visibility .6s}
+.splash img{width:min(440px,72vw);height:auto;filter:drop-shadow(0 0 30px rgba(241,217,160,.25));animation:splashIn 1s cubic-bezier(.2,.8,.2,1) both,splashGlow 2.4s ease-in-out .9s infinite}
+.splash-bar{width:min(220px,50vw);height:2px;background:rgba(241,217,160,.15);overflow:hidden}
+.splash-bar i{display:block;height:100%;width:40%;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:splashBar 1.1s ease-in-out infinite}
+.splash.out{opacity:0;visibility:hidden}
+html.loading{overflow:hidden}
+html.loading .hero *{animation-play-state:paused}
+@keyframes splashIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+@keyframes splashGlow{50%{filter:drop-shadow(0 0 44px rgba(241,217,160,.45))}}
+@keyframes splashBar{from{transform:translateX(-110%)}to{transform:translateX(260%)}}

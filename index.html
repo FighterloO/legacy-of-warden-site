@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en" class="no-js loading">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -17,9 +17,15 @@
 <meta name="twitter:image" content="https://fighterloo.github.io/legacy-of-warden-site/img/art/share.jpg">
 <link rel="icon" href="favicon.png">
 <link rel="preload" href="fonts/dmsans.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/site.css?v=202610252040">
+<link rel="stylesheet" href="css/site.css?v=202610252045">
 </head>
 <body>
+<div class="splash" id="splash" aria-hidden="true">
+  <img src="img/art/title-logo.webp" alt="" width="600" height="290" fetchpriority="high">
+  <div class="splash-bar"><i></i></div>
+</div>
+<script>/* failsafe: the page never stays behind the splash if a script fails */setTimeout(function(){document.documentElement.classList.remove("loading");var s=document.getElementById("splash");if(s)s.classList.add("out")},3000)</script>
+<noscript><style>.splash{display:none}html.loading .hero *{animation-play-state:running!important}</style></noscript>
 <div class="backdrop" aria-hidden="true">
   <div class="bd-layer" id="bd-a"></div>
   <div class="bd-layer" id="bd-b"></div>
@@ -300,7 +306,7 @@
   <div class="sheet-foot"><button class="btn" type="button" data-close>Back</button></div>
 </dialog>
 
-<script src="js/site.js?v=202610252040" defer></script>
-<script src="js/contact.js?v=202610252040" defer></script>
+<script src="js/site.js?v=202610252045" defer></script>
+<script src="js/contact.js?v=202610252045" defer></script>
 </body>
 </html>

@@ -240,7 +240,8 @@ function cardGrid({ grid, count, noun, list, match, card, detail }) {
 // ---- Data -----------------------------------------------------------------------------------------------------------------
 // no-cache: the browser re-checks the file with the server, so new data shows right after a push.
 const load = f => fetch('data/' + f, { cache: 'no-cache' }).then(r => r.json());
-Promise.all(['skills.json', 'items.json', 'sets.json', 'jobs.json', 'stats.json', 'planes.json'].map(load)).then(([skills, items, sets, jobs, stats, planes]) => {
+const dataReady = Promise.all(['skills.json', 'items.json', 'sets.json', 'jobs.json', 'stats.json', 'planes.json'].map(load));
+dataReady.then(([skills, items, sets, jobs, stats, planes]) => {
   heroStats(stats);
   planesSection(planes);
   jobsSection(jobs);
@@ -409,3 +410,27 @@ function itemsSection(items, sets, jobs) {
   $('#item-q').addEventListener('input', e => { f.q = e.target.value.trim().toLowerCase(); g.reset(); });
   g.render();
 }
+
+// ---- Splash: shown once per visit, until the first screen is ready (logo, hero video frame, fonts, data) or 1.5 s ---------
+(function splash() {
+  const el = $('#splash'), root = document.documentElement;
+  const done = () => {
+    root.classList.remove('loading');
+    if (!el) return;
+    el.classList.add('out');
+    setTimeout(() => el.remove(), 700);
+  };
+  let seen = false;
+  try { seen = sessionStorage.getItem('low-splash') === '1'; sessionStorage.setItem('low-splash', '1'); } catch (e) {}
+  if (!el || seen) { if (el) el.remove(); root.classList.remove('loading'); return; }
+  const video = document.querySelector('.hero-bg');
+  const videoReady = !video || video.readyState >= 2 ? Promise.resolve()
+    : new Promise(r => { video.addEventListener('loadeddata', r, { once: true }); video.addEventListener('error', r, { once: true }); });
+  const logo = el.querySelector('img');
+  const logoReady = logo.decode ? logo.decode().catch(() => {}) : Promise.resolve();
+  const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+  // Never longer than 1.5 s after the page started, and never shorter than 0.6 s so the logo does not just flash.
+  const cap = new Promise(r => setTimeout(r, Math.max(0, 1500 - performance.now())));
+  const floor = new Promise(r => setTimeout(r, Math.max(0, 600 - performance.now())));
+  Promise.race([Promise.all([videoReady, logoReady, fontsReady, dataReady.catch(() => {}), floor]), cap]).then(done);
+})();
