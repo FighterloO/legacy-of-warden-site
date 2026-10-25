@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,16 +7,28 @@
 <meta name="description" content="Plan the ritual, break the Guardian. A dark fantasy roguelite of spells, runes and dice for Android and PC.">
 <meta name="theme-color" content="#0c0a14">
 <meta property="og:title" content="Legacy of Warden">
-<meta property="og:description" content="Plan the ritual, break the Guardian. A dark fantasy roguelite of spells, runes and dice.">
-<meta property="og:image" content="img/shots/05-forbidden-art-sunfall.webp">
+<meta property="og:description" content="Plan the ritual, break the Guardian. A dark fantasy roguelite of dice, runes and rituals for Android and PC.">
+<meta property="og:image" content="https://fighterloo.github.io/legacy-of-warden-site/img/art/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://fighterloo.github.io/legacy-of-warden-site/">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://fighterloo.github.io/legacy-of-warden-site/img/art/share.jpg">
 <link rel="icon" href="favicon.png">
 <link rel="preload" href="fonts/dmsans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
+<div class="backdrop" aria-hidden="true">
+  <div class="bd-layer" id="bd-a"></div>
+  <div class="bd-layer" id="bd-b"></div>
+  <div class="bd-shade"></div>
+  <canvas id="embers"></canvas>
+</div>
+
 <header class="nav" id="top">
-  <a class="nav-brand" href="#top"><img src="img/art/icon-192.png" alt="" width="28" height="28">Legacy of Warden</a>
+  <a class="nav-brand" href="#top"><img src="img/art/icon-192.png" alt="" width="28" height="28"><span>Legacy of Warden</span></a>
   <nav class="nav-links" aria-label="Sections">
     <a href="#trailer">Trailer</a>
     <a href="#features">Features</a>
@@ -28,8 +40,8 @@
 </header>
 
 <main>
-  <section class="hero">
-    <img class="hero-bg" src="img/art/warden-menu-bg.webp" alt="" fetchpriority="high">
+  <section class="hero" data-bg="">
+    <video class="hero-bg" src="media/hero-loop.mp4" poster="media/hero-loop.webp" autoplay muted loop playsinline preload="auto"></video>
     <div class="hero-inner">
       <img class="hero-logo" src="img/art/title-logo.webp" alt="Legacy of Warden" width="600" height="290">
       <p class="hero-tag">Plan the ritual. Break the Guardian.</p>
@@ -40,14 +52,15 @@
       </div>
       <ul class="hero-stats" id="hero-stats" aria-label="The game in numbers"></ul>
     </div>
+    <a class="hero-down" href="#trailer" aria-label="Scroll down"></a>
   </section>
 
-  <section class="sec" id="trailer">
-    <div class="sec-head">
+  <section class="sec" id="trailer" data-bg="img/bg/trailer.webp">
+    <div class="sec-head reveal">
       <p class="eyebrow">See it in motion</p>
       <h2>Trailer</h2>
     </div>
-    <div class="videos">
+    <div class="videos reveal">
       <figure class="video video-wide">
         <video src="media/gameplay.mp4" poster="media/gameplay.webp" controls playsinline preload="none"></video>
         <figcaption><strong>Expedition and Realm</strong><span>Roll the dice through a plane, build the ritual, then roam the Endless Realm.</span></figcaption>
@@ -65,67 +78,97 @@
     </div>
   </section>
 
-  <section class="sec" id="features">
-    <div class="sec-head">
+  <section class="sec" id="loop" data-bg="img/bg/trailer.webp">
+    <div class="sec-head reveal">
+      <p class="eyebrow">How a floor plays</p>
+      <h2>Roll. Loot. Ritual. Break.</h2>
+    </div>
+    <ol class="loop">
+      <li class="reveal"><img src="img/shots/01-expedition-board.webp" alt="" loading="lazy"><b>Roll</b><span>Five turns on the board. Every pip is a step.</span></li>
+      <li class="reveal"><img src="img/shots/02-moonhaven.webp" alt="" loading="lazy"><b>Loot</b><span>Runes, gold, chests, merchants and shrines.</span></li>
+      <li class="reveal"><img src="img/shots/03-ritual.webp" alt="" loading="lazy"><b>Ritual</b><span>Slot your spells and runes. Plan the chain.</span></li>
+      <li class="reveal"><img src="img/shots/04-combo.webp" alt="" loading="lazy"><b>Break</b><span>The ritual plays out. The Guardian falls, or you do.</span></li>
+    </ol>
+  </section>
+
+  <section class="sec" id="features" data-bg="img/bg/features.webp">
+    <div class="sec-head reveal">
       <p class="eyebrow">What you do</p>
       <h2>Features</h2>
     </div>
     <div class="features">
-      <article class="feature">
+      <article class="feature reveal">
         <img src="img/shots/01-expedition-board.webp" alt="The expedition board on the Verdant Reach" loading="lazy">
         <div><h3>Expedition board</h3><p>Six planes, 25 floors each. Roll the dice, walk the board, loot chests, find runes, meet merchants and dodge curses before the Guardian wakes.</p></div>
       </article>
-      <article class="feature">
+      <article class="feature reveal">
         <img src="img/shots/03-ritual.webp" alt="Building a ritual before a fight" loading="lazy">
         <div><h3>Ritual battles</h3><p>Preparation wins the fight. Fill the ritual slots, chain runes, stack fire, ice, lightning, chaos and physical ailments, then watch the cast break the Guardian.</p></div>
       </article>
-      <article class="feature">
+      <article class="feature reveal">
         <img src="img/shots/05-forbidden-art-sunfall.webp" alt="The Forbidden Art Sunfall" loading="lazy">
         <div><h3>Forbidden Arts and Signatures</h3><p>Each job has a Signature skill and one Forbidden Art: a finisher you recover scroll by scroll and unleash when its gauge is full.</p></div>
       </article>
-      <article class="feature">
+      <article class="feature reveal">
         <img src="img/shots/06-realm.webp" alt="The Endless Realm board" loading="lazy">
         <div><h3>The Endless Realm</h3><p>A whole island under fog. Towns, ruins, watchtowers and boss lairs; Bonded Beasts, a Nemesis that hunts you, fishing, mining and ten Mythic sets to forge.</p></div>
       </article>
-      <article class="feature">
+      <article class="feature reveal">
         <img src="img/shots/02-moonhaven.webp" alt="The city of Moonhaven at night" loading="lazy">
         <div><h3>Moonhaven</h3><p>The city hub. Gear Shop, Scroll Merchant, the Constellation, the Training Camp and a story told by the people who still keep the lantern lit.</p></div>
       </article>
-      <article class="feature">
+      <article class="feature reveal">
         <img src="img/shots/08-ritual-duel.webp" alt="A Ritual Duel card game" loading="lazy">
         <div><h3>Ritual Duel and more</h3><p>Duel rival Wardens with your own spells as cards, climb the Spire of Echoes, take daily missions and chase 70 achievements.</p></div>
       </article>
     </div>
   </section>
 
-  <section class="sec" id="gallery">
-    <div class="sec-head">
+  <section class="sec" id="gallery" data-bg="img/bg/features.webp">
+    <div class="sec-head reveal">
       <p class="eyebrow">In-game</p>
       <h2>Screenshots</h2>
     </div>
-    <div class="gallery" id="gallery-grid"></div>
+    <div class="show reveal" id="show">
+      <div class="show-stage" id="show-stage"></div>
+      <div class="show-bar">
+        <button type="button" class="show-nav" data-step="-1" aria-label="Previous screenshot">&#8249;</button>
+        <div class="show-thumbs" id="show-thumbs"></div>
+        <button type="button" class="show-nav" data-step="1" aria-label="Next screenshot">&#8250;</button>
+      </div>
+    </div>
   </section>
 
-  <section class="sec" id="planes">
-    <div class="sec-head">
+  <section class="story" id="story" data-bg="media/hero-loop.webp">
+    <div class="story-inner reveal">
+      <img src="img/art/maelis.webp" alt="Elder Maelis holding the lantern" loading="lazy" width="420" height="520">
+      <blockquote>
+        <p>“The sun did not set. It was eaten. Something opened beneath the heart of the world and drank the light.”</p>
+        <footer>The Long Night · the story of Moonhaven</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="sec" id="planes" data-bg="img/bg/planes.webp">
+    <div class="sec-head reveal">
       <p class="eyebrow">Expeditions</p>
       <h2>Six planes</h2>
     </div>
-    <ol class="planes" id="planes-list"></ol>
+    <ol class="planes reveal" id="planes-list"></ol>
   </section>
 
-  <section class="sec" id="jobs">
-    <div class="sec-head">
+  <section class="sec" id="jobs" data-bg="img/bg/job-archmage.webp">
+    <div class="sec-head reveal">
       <p class="eyebrow">Choose your path</p>
       <h2>Jobs</h2>
       <p class="lede">Five jobs, each with a talent tree, a gauge, a Signature skill, two capstones and a Forbidden Art.</p>
     </div>
     <div class="tabs" id="job-tabs" role="tablist"></div>
-    <div class="job" id="job-panel"></div>
+    <div class="job reveal" id="job-panel"></div>
   </section>
 
-  <section class="sec" id="skills">
-    <div class="sec-head">
+  <section class="sec" id="skills" data-bg="img/bg/skills.webp">
+    <div class="sec-head reveal">
       <p class="eyebrow">Spellbook</p>
       <h2>Skills</h2>
       <p class="lede">Every skill, rite and Signature, straight from the game's data.</p>
@@ -139,8 +182,8 @@
     <div class="grid" id="skill-grid"></div>
   </section>
 
-  <section class="sec" id="items">
-    <div class="sec-head">
+  <section class="sec" id="items" data-bg="img/bg/items.webp">
+    <div class="sec-head reveal">
       <p class="eyebrow">Armoury</p>
       <h2>Items</h2>
       <p class="lede">Weapons, robes and charms from Regular to Mythical, with sets and Legendary uniques.</p>
@@ -154,25 +197,25 @@
     <div class="grid" id="item-grid"></div>
   </section>
 
-  <section class="sec" id="platforms">
-    <div class="sec-head">
+  <section class="sec" id="platforms" data-bg="img/bg/items.webp">
+    <div class="sec-head reveal">
       <p class="eyebrow">Play anywhere</p>
       <h2>Platforms</h2>
     </div>
     <div class="platforms">
-      <div class="platform"><h3>Android</h3><p>On Google Play. Portrait and landscape, made for touch.</p></div>
-      <div class="platform"><h3>PC</h3><p>Through Google Play Games on PC: the same game, mouse and keyboard, with cross-save from your phone.</p></div>
-      <div class="platform"><h3>Offline</h3><p>Single player and fully playable offline. No forced ads.</p></div>
+      <div class="platform reveal"><h3>Android</h3><p>On Google Play. Portrait and landscape, made for touch.</p></div>
+      <div class="platform reveal"><h3>PC</h3><p>Through Google Play Games on PC: the same game, mouse and keyboard, with cross-save from your phone.</p></div>
+      <div class="platform reveal"><h3>Offline</h3><p>Single player and fully playable offline. No forced ads.</p></div>
     </div>
   </section>
 
-  <section class="sec" id="release">
-    <div class="sec-head">
+  <section class="sec" id="release" data-bg="img/bg/release.webp" data-tint="blood">
+    <div class="sec-head reveal">
       <p class="eyebrow">Launch plan</p>
       <h2>Release and DLC</h2>
     </div>
     <div class="release">
-      <article class="offer">
+      <article class="offer reveal">
         <p class="offer-price">Free</p>
         <h3>Legacy of Warden</h3>
         <ul>
@@ -183,7 +226,7 @@
           <li>No forced ads, never pay-to-win</li>
         </ul>
       </article>
-      <article class="offer offer-dlc">
+      <article class="offer offer-dlc reveal">
         <img class="offer-art" src="img/art/plane-wide-6.webp" alt="" loading="lazy">
         <p class="offer-price">Rp 35.000 <span>about US$2-2.5</span></p>
         <h3>Bloodmoon Realm</h3>

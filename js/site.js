@@ -9,14 +9,14 @@ const LINKS = [
 ];
 
 const SHOTS = [
-  ['01-expedition-board', 'Expedition board'],
-  ['02-moonhaven', 'Moonhaven'],
-  ['03-ritual', 'Building the ritual'],
-  ['04-combo', 'A Guardian fight'],
-  ['05-forbidden-art-sunfall', 'Forbidden Art: Sunfall'],
-  ['06-realm', 'The Endless Realm'],
-  ['07-realm-map', 'Map of the Realm'],
-  ['08-ritual-duel', 'Ritual Duel'],
+  ['01-expedition-board', 'Explore the Planes', 'Roll the dice, walk the board, loot what you find.'],
+  ['02-moonhaven', 'Moonhaven', 'The city hub, lit by the last lantern.'],
+  ['03-ritual', 'Build your Ritual', 'Slot spells and runes before the Guardian wakes.'],
+  ['04-combo', 'Chain the Combo', 'Ailments stack, hits chain, numbers climb.'],
+  ['05-forbidden-art-sunfall', 'Forbidden Art: Sunfall', 'A pillar of sunlight, a rain of meteors, a falling sun.'],
+  ['06-realm', 'The Endless Realm', 'An island under fog, full of lairs, towns and rivals.'],
+  ['07-realm-map', 'Map of the Realm', 'One island, many regions, thirty bosses.'],
+  ['08-ritual-duel', 'Ritual Duel', 'Your own spells, played as cards against rival Wardens.'],
 ];
 const PLANES = ['The Verdant Reach', 'Sands of the Eclipse', 'The Astral Glacier', 'Emberfall Dominion', 'Crown of the Void', 'The Scarlet Rift'];
 const EL = { fire: 'Fire', ice: 'Ice', lightning: 'Lightning', chaos: 'Chaos', physical: 'Physical', ward: 'Ward' };
@@ -38,15 +38,108 @@ function openSheet(html, wide) {
 }
 sheet.addEventListener('click', e => { if (e.target === sheet || e.target.closest('[data-close]')) sheet.close(); });
 
-// ---- Static parts ---------------------------------------------------------------------------------------------------------
-$('#gallery-grid').innerHTML = SHOTS.map(([f, t], i) =>
-  `<button type="button" data-shot="${i}" aria-label="${esc(t)}"><img src="img/shots/${f}.webp" alt="${esc(t)}" loading="lazy" width="1280" height="720"></button>`).join('');
-$('#gallery-grid').addEventListener('click', e => {
-  const b = e.target.closest('[data-shot]');
-  if (!b) return;
-  const [f, t] = SHOTS[+b.dataset.shot];
-  openSheet(`<img src="img/shots/${f}.webp" alt="${esc(t)}"><p style="padding:10px 14px;color:var(--mute)">${esc(t)}</p>`, true);
-});
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---- Immersive backdrop: each section names its art in data-bg; the fixed layer crossfades as it comes into view ----------
+const bdLayers = [$('#bd-a'), $('#bd-b')];
+let bdFront = 0, bdUrl = null;
+function setBackdrop(url) {
+  if (url === bdUrl) return;
+  bdUrl = url;
+  const next = bdLayers[1 - bdFront];
+  const show = () => {
+    next.style.backgroundImage = url ? `url("${url}")` : 'none';
+    next.classList.add('on');
+    bdLayers[bdFront].classList.remove('on');
+    bdFront = 1 - bdFront;
+  };
+  if (!url) return show();
+  const img = new Image();
+  img.onload = () => { if (bdUrl === url) show(); };
+  img.src = url;
+}
+const bgSections = [...document.querySelectorAll('[data-bg]')];
+const bgObserver = new IntersectionObserver(entries => {
+  for (const e of entries) if (e.isIntersecting) {
+    setBackdrop(e.target.dataset.bg || null);
+    document.body.classList.toggle('tint-blood', e.target.dataset.tint === 'blood');
+  }
+}, { rootMargin: '-45% 0px -45% 0px' });
+bgSections.forEach(s => bgObserver.observe(s));
+
+// ---- Scroll reveal ----------------------------------------------------------------------------------------------------------
+const revealObserver = new IntersectionObserver(entries => {
+  for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); revealObserver.unobserve(e.target); }
+}, { rootMargin: '0px 0px -8% 0px' });
+const watchReveal = root => root.querySelectorAll('.reveal:not(.in)').forEach(el => reduced ? el.classList.add('in') : revealObserver.observe(el));
+watchReveal(document);
+
+// ---- Embers: a few warm motes drifting up over the backdrop (paused when the tab is hidden) -----------------------------------
+(function embers() {
+  const cv = $('#embers'), cx = cv.getContext('2d');
+  if (reduced || !cx) return;
+  let w, h, dpr, motes = [];
+  const count = () => Math.round(Math.min(70, (innerWidth * innerHeight) / 22000));
+  const spawn = (y) => ({ x: Math.random() * w, y: y ?? h + 10, r: .6 + Math.random() * 1.8, vy: .15 + Math.random() * .45, vx: (Math.random() - .5) * .2, a: .25 + Math.random() * .55, p: Math.random() * 6.28, hue: 28 + Math.random() * 20 });
+  function size() {
+    dpr = Math.min(2, devicePixelRatio || 1);
+    w = innerWidth; h = innerHeight;
+    cv.width = w * dpr; cv.height = h * dpr;
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    motes = Array.from({ length: count() }, () => spawn(Math.random() * h));
+  }
+  function frame(t) {
+    cx.clearRect(0, 0, w, h);
+    const blood = document.body.classList.contains('tint-blood');
+    for (const m of motes) {
+      m.y -= m.vy; m.x += m.vx + Math.sin(t / 1400 + m.p) * .15;
+      if (m.y < -10) Object.assign(m, spawn());
+      const a = m.a * (.6 + .4 * Math.sin(t / 500 + m.p));
+      cx.fillStyle = `hsla(${blood ? 355 : m.hue},100%,${blood ? 55 : 65}%,${a})`;
+      cx.beginPath(); cx.arc(m.x, m.y, m.r, 0, 6.283); cx.fill();
+    }
+    if (!document.hidden) requestAnimationFrame(frame);
+  }
+  size();
+  addEventListener('resize', size);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) requestAnimationFrame(frame); });
+  requestAnimationFrame(frame);
+})();
+
+// ---- Screenshot showcase: big slide with caption, thumbnails, swipe, auto-advance -------------------------------------------------
+(function showcase() {
+  const stage = $('#show-stage'), thumbs = $('#show-thumbs');
+  stage.innerHTML = SHOTS.map(([f, t, d], i) =>
+    `<div class="show-slide${i ? '' : ' on'}"><img src="img/shots/${f}.webp" alt="${esc(t)}" ${i ? 'loading="lazy"' : ''} width="1280" height="720"><div class="show-cap"><b>${esc(t)}</b><span>${esc(d)}</span></div></div>`).join('');
+  thumbs.innerHTML = SHOTS.map(([f, t], i) =>
+    `<button type="button" data-i="${i}" aria-label="${esc(t)}" aria-current="${i === 0}"><img src="img/shots/${f}.webp" alt="" loading="lazy"></button>`).join('');
+  const slides = [...stage.children], tb = [...thumbs.children];
+  let cur = 0, timer = null;
+  function go(i) {
+    cur = (i + SHOTS.length) % SHOTS.length;
+    slides.forEach((s, k) => s.classList.toggle('on', k === cur));
+    tb.forEach((b, k) => b.setAttribute('aria-current', k === cur));
+    tb[cur].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+  }
+  const auto = () => { clearInterval(timer); if (!reduced) timer = setInterval(() => go(cur + 1), 5000); };
+  thumbs.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) { go(+b.dataset.i); auto(); } });
+  $('#show').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b) { go(cur + +b.dataset.step); auto(); } });
+  let x0 = null, moved = false;
+  stage.addEventListener('pointerdown', e => { x0 = e.clientX; moved = false; });
+  stage.addEventListener('pointerup', e => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) { moved = true; go(cur + (dx < 0 ? 1 : -1)); auto(); }
+  });
+  stage.addEventListener('click', () => {
+    if (moved) return;
+    const [f, t, d] = SHOTS[cur];
+    openSheet(`<img src="img/shots/${f}.webp" alt="${esc(t)}"><p style="padding:10px 14px"><b style="color:var(--gold-hi);font-family:var(--serif)">${esc(t)}</b> <span style="color:var(--mute)">${esc(d)}</span></p>`, true);
+  });
+  // Only advance while the showcase is on screen.
+  new IntersectionObserver(([e]) => e.isIntersecting ? auto() : clearInterval(timer)).observe(stage);
+})();
+document.documentElement.classList.remove('no-js');
 $('#planes-list').innerHTML = PLANES.map((n, i) =>
   `<li><img src="img/art/plane-wide-${i + 1}.webp" alt="" loading="lazy"><span><small>Plane ${i + 1}</small>${esc(n)}</span></li>`).join('');
 $('#links').innerHTML = LINKS.filter(l => l.url).map(l => `<a href="${esc(l.url)}" rel="noopener">${esc(l.label)}</a>`).join('') ||
@@ -112,6 +205,10 @@ function jobsSection(jobs) {
     const j = jobs[i];
     tabs.querySelectorAll('.tab').forEach((t, k) => t.setAttribute('aria-selected', k === i));
     panel.style.setProperty('--jc', j.color);
+    // The backdrop shows this job's sanctum while the Jobs section is on screen.
+    const sec = $('#jobs');
+    sec.dataset.bg = 'img/bg/job-' + j.id + '.webp';
+    if (bdUrl && bdUrl.includes('/job-')) setBackdrop(sec.dataset.bg);
     panel.innerHTML = `
       <div class="job-portrait"><img src="${j.portrait}" alt="${esc(j.name)}" loading="lazy"></div>
       <div>
