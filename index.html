@@ -29,14 +29,17 @@
 
 <header class="nav" id="top">
   <a class="nav-brand" href="#top"><img src="img/art/icon-192.png" alt="" width="28" height="28"><span>Legacy of Warden</span></a>
-  <nav class="nav-links" aria-label="Sections">
-    <a href="#trailer">Trailer</a>
-    <a href="#features">Features</a>
-    <a href="#jobs">Jobs</a>
-    <a href="#skills">Skills</a>
-    <a href="#items">Items</a>
-    <a href="#release">Release</a>
-  </nav>
+  <div class="nav-right">
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#trailer">Trailer</a>
+      <a href="#features">Features</a>
+      <a href="#jobs">Jobs</a>
+      <a href="#skills">Skills</a>
+      <a href="#items">Items</a>
+      <a href="#release">Release</a>
+    </nav>
+    <a class="btn btn-gold nav-cta" href="#release">Coming soon</a>
+  </div>
 </header>
 
 <main>
@@ -126,8 +129,8 @@
 
   <section class="sec" id="gallery" data-bg="img/bg/features.webp">
     <div class="sec-head reveal">
-      <p class="eyebrow">In-game</p>
-      <h2>Screenshots</h2>
+      <p class="eyebrow">In-game preview</p>
+      <h2>Through the Warden's Eyes</h2>
     </div>
     <div class="show reveal" id="show">
       <div class="show-stage" id="show-stage"></div>
@@ -223,7 +226,7 @@
           <li>Five jobs, six planes, the Spire of Echoes</li>
           <li>The whole Endless Realm: towns, beasts, Nemesis, Mythic sets and the Abyss</li>
           <li>Level cap 65 for everyone</li>
-          <li>No forced ads, never pay-to-win</li>
+          <li>No forced ads, never pay-to-win, fully offline</li>
         </ul>
       </article>
       <article class="offer offer-dlc reveal">
@@ -247,11 +250,11 @@
 
 <footer class="foot">
   <img src="img/art/icon-192.png" alt="" width="40" height="40" loading="lazy">
-  <div>
-    <p class="foot-title">Legacy of Warden</p>
-    <p class="foot-links" id="links"></p>
-    <p class="fine">Made by Baihaqi Studio. Third-party art and fonts under their own licences.</p>
-  </div>
+  <p class="foot-title">Legacy of Warden</p>
+  <p class="foot-links" id="links"></p>
+  <p class="foot-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="press.html">Press kit</a></p>
+  <p class="foot-contact">Info and questions: <span class="contact"></span></p>
+  <p class="fine">© 2026 Baihaqi Studio. Third-party art and fonts under their own licences.</p>
 </footer>
 
 <dialog class="sheet" id="sheet">
@@ -260,5 +263,6 @@
 </dialog>
 
 <script src="js/site.js" defer></script>
+<script src="js/contact.js" defer></script>
 </body>
 </html>

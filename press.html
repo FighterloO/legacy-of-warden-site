@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Press Kit · Legacy of Warden</title>
+<meta name="description" content="Fact sheet, description, logo and screenshots of Legacy of Warden for press and creators.">
+<meta name="theme-color" content="#0c0a14">
+<link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body class="legal-page">
+<div class="backdrop" aria-hidden="true"><div class="bd-layer on" style="background-image:url('img/bg/features.webp')"></div><div class="bd-shade"></div></div>
+<header class="nav">
+  <a class="nav-brand" href="./"><img src="img/art/icon-192.png" alt="" width="28" height="28"><span>Legacy of Warden</span></a>
+  <nav class="nav-links" aria-label="Pages"><a href="./">Home</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav>
+</header>
+
+<main class="legal legal-wide">
+  <p class="eyebrow">For press and creators</p>
+  <h1>Press Kit</h1>
+
+  <div class="press-grid">
+    <section>
+      <h2>Fact sheet</h2>
+      <dl class="facts">
+        <dt>Developer</dt><dd>Baihaqi Studio, Indonesia</dd>
+        <dt>Genre</dt><dd>Dark fantasy roguelite, turn-based strategy</dd>
+        <dt>Platforms</dt><dd>Android (Google Play), PC (Google Play Games on PC)</dd>
+        <dt>Release</dt><dd>To be announced</dd>
+        <dt>Price</dt><dd>Free. Bloodmoon Realm pack: Rp 35.000 (about US$2-2.5)</dd>
+        <dt>Players</dt><dd>Single player, plays fully offline</dd>
+        <dt>Monetisation</dt><dd>No forced ads, never pay-to-win</dd>
+        <dt>Contact</dt><dd><span class="contact"></span></dd>
+      </dl>
+    </section>
+    <section>
+      <h2>Short description</h2>
+      <p>Plan the ritual, break the Guardian. A dark fantasy roguelite of spells and runes.</p>
+      <h2>About the game</h2>
+      <p>The last lantern of Moonhaven still burns, and you are its Warden. Explore six planes floor by floor with the dice,
+      gather runes and spells, then set your ritual and watch it break the Guardian. Grow your Warden through five jobs with
+      Signature skills and Forbidden Arts, then roam the Endless Realm: an island of towns, beasts, rival Wardens, Mythic sets
+      and the Abyss.</p>
+      <h2>Key features</h2>
+      <ul>
+        <li>Dice-board expeditions across six planes of 25 floors</li>
+        <li>Ritual battles: preparation wins, combos chain five elements</li>
+        <li>Five jobs, each with a Signature skill and a Forbidden Art</li>
+        <li>The Endless Realm: towns, Bonded Beasts, Nemesis, Ritual Duel, fishing, ten Mythic sets</li>
+        <li>A story told by the people of Moonhaven, 70 achievements</li>
+      </ul>
+    </section>
+  </div>
+
+  <h2>Logo and icon</h2>
+  <div class="press-assets">
+    <a class="asset" href="img/art/title-logo.webp" download><img src="img/art/title-logo.webp" alt="Legacy of Warden logo" loading="lazy"><span>Logo (webp)</span></a>
+    <a class="asset" href="img/art/icon-192.png" download><img src="img/art/icon-192.png" alt="App icon" loading="lazy"><span>App icon (png)</span></a>
+    <a class="asset" href="img/art/share.jpg" download><img src="img/art/share.jpg" alt="Banner" loading="lazy"><span>Banner 1200 x 630 (jpg)</span></a>
+  </div>
+
+  <h2>In-game previews</h2>
+  <div class="press-assets" id="press-shots"></div>
+
+  <p class="fine">You may use these assets to write about, stream or make videos of Legacy of Warden. Please do not alter the
+  logo.</p>
+</main>
+
+<footer class="foot">
+  <img src="img/art/icon-192.png" alt="" width="40" height="40" loading="lazy">
+  <p class="foot-title">Legacy of Warden</p>
+  <p class="foot-links"><a href="./">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="press.html">Press kit</a></p>
+  <p class="fine">© 2026 Baihaqi Studio. Third-party art and fonts under their own licences.</p>
+</footer>
+<script src="js/contact.js" defer></script>
+<script>
+// Screenshots listed once here; the files live in img/shots/.
+['01-expedition-board','02-moonhaven','03-ritual','04-combo','05-forbidden-art-sunfall','06-realm','07-realm-map','08-ritual-duel']
+  .forEach(f => document.getElementById('press-shots').insertAdjacentHTML('beforeend',
+    `<a class="asset" href="img/shots/${f}.webp" download><img src="img/shots/${f}.webp" alt="" loading="lazy"><span>${f.slice(3).replace(/-/g,' ')}</span></a>`));
+</script>
+</body>
+</html>

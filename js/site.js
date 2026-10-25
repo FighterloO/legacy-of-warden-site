@@ -67,6 +67,18 @@ const bgObserver = new IntersectionObserver(entries => {
 }, { rootMargin: '-45% 0px -45% 0px' });
 bgSections.forEach(s => bgObserver.observe(s));
 
+// The nav link of the section in the middle of the screen is lit.
+const navLinks = [...document.querySelectorAll('.nav-links a')];
+const spy = new IntersectionObserver(entries => {
+  for (const e of entries) if (e.isIntersecting)
+    navLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+}, { rootMargin: '-45% 0px -45% 0px' });
+navLinks.forEach(a => { const s = document.querySelector(a.getAttribute('href')); if (s) spy.observe(s); });
+
+// The hero video only plays while the hero is on screen.
+const heroVideo = document.querySelector('.hero-bg');
+if (heroVideo) new IntersectionObserver(([e]) => { if (e.isIntersecting) heroVideo.play().catch(() => {}); else heroVideo.pause(); }).observe(heroVideo);
+
 // ---- Scroll reveal ----------------------------------------------------------------------------------------------------------
 const revealObserver = new IntersectionObserver(entries => {
   for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); revealObserver.unobserve(e.target); }
@@ -78,17 +90,22 @@ watchReveal(document);
 (function embers() {
   const cv = $('#embers'), cx = cv.getContext('2d');
   if (reduced || !cx) return;
-  let w, h, dpr, motes = [];
-  const count = () => Math.round(Math.min(70, (innerWidth * innerHeight) / 22000));
+  // Kept cheap on purpose: 1x resolution, at most 36 motes, about 30 frames a second.
+  let w, h, dpr, motes = [], lastDraw = 0;
+  const count = () => Math.round(Math.min(36, (innerWidth * innerHeight) / 40000));
   const spawn = (y) => ({ x: Math.random() * w, y: y ?? h + 10, r: .6 + Math.random() * 1.8, vy: .15 + Math.random() * .45, vx: (Math.random() - .5) * .2, a: .25 + Math.random() * .55, p: Math.random() * 6.28, hue: 28 + Math.random() * 20 });
   function size() {
-    dpr = Math.min(2, devicePixelRatio || 1);
+    dpr = 1;
     w = innerWidth; h = innerHeight;
     cv.width = w * dpr; cv.height = h * dpr;
     cx.setTransform(dpr, 0, 0, dpr, 0, 0);
     motes = Array.from({ length: count() }, () => spawn(Math.random() * h));
   }
   function frame(t) {
+    if (document.hidden) return;
+    requestAnimationFrame(frame);
+    if (t - lastDraw < 32) return;
+    lastDraw = t;
     cx.clearRect(0, 0, w, h);
     const blood = document.body.classList.contains('tint-blood');
     for (const m of motes) {
@@ -96,9 +113,8 @@ watchReveal(document);
       if (m.y < -10) Object.assign(m, spawn());
       const a = m.a * (.6 + .4 * Math.sin(t / 500 + m.p));
       cx.fillStyle = `hsla(${blood ? 355 : m.hue},100%,${blood ? 55 : 65}%,${a})`;
-      cx.beginPath(); cx.arc(m.x, m.y, m.r, 0, 6.283); cx.fill();
+      cx.fillRect(m.x, m.y, m.r * 1.6, m.r * 1.6);
     }
-    if (!document.hidden) requestAnimationFrame(frame);
   }
   size();
   addEventListener('resize', size);

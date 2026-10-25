@@ -4,6 +4,10 @@ A static promo page for the game: no build step, no framework. It is served by G
 
 ```
 index.html        the page (all text lives here)
+privacy.html      Privacy Policy (the URL for the Play Console)
+terms.html        Terms of Use
+press.html        Press kit: fact sheet, logo, banner, in-game previews
+js/contact.js     the contact email shown on every page (CONTACT_EMAIL)
 css/site.css      styles (game palette: dark navy, gold, bronze)
 js/site.js        skills / items / jobs browsers, gallery, links (LINKS at the top)
 data/*.json       generated from the game's code (do not edit by hand)
@@ -37,6 +41,8 @@ and push; Pages updates in a minute or two.
 
 ## Other updates
 
+- Contact email: `CONTACT_EMAIL` in `js/contact.js`.
+- Privacy Policy: `privacy.html`. Its Play Console URL is https://fighterloo.github.io/legacy-of-warden-site/privacy.html. Keep it in step with the Data safety form.
 - Store and video links: `LINKS` at the top of `js/site.js` (empty links stay hidden).
 - Screenshots: replace the files in `img/shots/` (1280 x 720 webp) and the `SHOTS` list in `js/site.js`.
 - Trailer clips: `media/*.mp4` (keep each under ~10 MB; 720p, H.264, `-movflags +faststart`).
