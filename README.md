@@ -56,6 +56,11 @@ and push; Pages updates in a minute or two.
 - Platforms: `img/devices/{phone,tablet,pc}.webp` are the phone, tablet and PC captures shown in the CSS device frames.
 - Release and DLC text: the `#release` section of `index.html`.
 
+## Cache
+
+After changing `css/site.css` or a script, bump the `?v=` number on its link in all four HTML pages, so visitors
+get the new file instead of a cached one. `data/*.json` is fetched with `no-cache` and needs nothing.
+
 ## Publish on GitHub Pages
 
 1. Create a GitHub repo (for example `legacy-of-warden-site`) and push this folder to its `main` branch.

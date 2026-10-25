@@ -21,6 +21,8 @@ const SHOTS = [
 const PLANES = ['The Verdant Reach', 'Sands of the Eclipse', 'The Astral Glacier', 'Emberfall Dominion', 'Crown of the Void', 'The Scarlet Rift'];
 const EL = { fire: 'Fire', ice: 'Ice', lightning: 'Lightning', chaos: 'Chaos', physical: 'Physical', ward: 'Ward' };
 const TIER_COLOR = ['#b8c4cc', '#82d997', '#c19aff', '#ffa64d', '#e86ad6', '#ff6a3d'];
+// Talent tier colours, as in the game (talents.js RARITIES).
+const TALENT_COLOR = ['#82d997', '#7ebaff', '#c19aff', '#f3ce77'];
 const PAGE = 24;
 
 const $ = s => document.querySelector(s);
@@ -192,6 +194,28 @@ function chips(root, options, onChange) {
 }
 
 // A filtered, paged card grid.
+// ---- Hover panel ----------------------------------------------------------------------------------------------------------
+const canHover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+const tip = document.createElement('div');
+tip.className = 'tip';
+tip.setAttribute('role', 'tooltip');
+document.body.appendChild(tip);
+let tipFor = null;
+function showTip(card, html) {
+  tipFor = card;
+  tip.innerHTML = html;
+  tip.classList.add('on');
+  const r = card.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, gap = 12;
+  // Beside the card, on the side with room; kept inside the window.
+  let x = r.right + gap;
+  if (x + w > innerWidth - 8) x = r.left - gap - w;
+  if (x < 8) x = Math.max(8, Math.min(innerWidth - w - 8, r.left));
+  let y = Math.max(70, Math.min(r.top, innerHeight - h - 8));
+  tip.style.transform = `translate(${Math.round(x)}px,${Math.round(y)}px)`;
+}
+function hideTip() { tipFor = null; tip.classList.remove('on'); }
+addEventListener('scroll', hideTip, { passive: true });
+
 function cardGrid({ grid, count, noun, list, match, card, detail }) {
   let shown = PAGE, items = list;
   function render() {
@@ -203,13 +227,22 @@ function cardGrid({ grid, count, noun, list, match, card, detail }) {
   grid.addEventListener('click', e => {
     if (e.target.closest('[data-more]')) { shown += PAGE * 2; render(); return; }
     const c = e.target.closest('[data-i]');
-    if (c) openSheet(detail(items[+c.dataset.i]));
+    if (c) { hideTip(); openSheet(detail(items[+c.dataset.i])); }
   });
+  // With a mouse, hovering a card shows the same detail in a floating panel; touch screens use the tap sheet.
+  if (canHover) {
+    grid.addEventListener('mouseover', e => {
+      const c = e.target.closest('[data-i]');
+      if (c && c !== tipFor) showTip(c, detail(items[+c.dataset.i]));
+    });
+    grid.addEventListener('mouseleave', hideTip);
+  }
   return { render, reset() { shown = PAGE; render(); } };
 }
 
 // ---- Data -----------------------------------------------------------------------------------------------------------------
-const load = f => fetch('data/' + f).then(r => r.json());
+// no-cache: the browser re-checks the file with the server, so new data shows right after a push.
+const load = f => fetch('data/' + f, { cache: 'no-cache' }).then(r => r.json());
 Promise.all(['skills.json', 'items.json', 'sets.json', 'jobs.json', 'stats.json'].map(load)).then(([skills, items, sets, jobs, stats]) => {
   heroStats(stats);
   jobsSection(jobs);
@@ -270,7 +303,10 @@ function skillsSection(skills, jobs) {
     detail: s => `<div style="--c:${elColor(s.element)}">
       <div class="d-head"><img src="${s.img}" alt=""><div><h3>${esc(s.name)}</h3><small style="color:var(--c);text-transform:uppercase;letter-spacing:.08em">${EL[s.element] || ''} ${esc(s.kind)}${s.job ? ' · ' + esc(jobName(s.job)) : ''}</small></div></div>
       <p class="d-text">${esc(s.text)}</p>
-      <div class="d-tags"><span>Cost ${s.cost} Charge</span>${s.hits ? `<span>${s.hits} hit${s.hits > 1 ? 's' : ''}</span>` : ''}${s.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div></div>`,
+      <div class="d-tags"><span>Cost ${s.cost} Charge</span>${s.hits ? `<span>${s.hits} hit${s.hits > 1 ? 's' : ''}</span>` : ''}${s.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>
+      ${s.talents.length ? `<div class="d-talents"><h4>Talents</h4><p class="d-note">Opened at skill level 4, 8, 12 and 15. Each ritual slot uses one of them, or none.</p>
+        ${s.talents.map((t, i) => `<div class="d-talent" style="--t:${TALENT_COLOR[i]}"><b><span>Lv ${t.level}</span>${esc(t.name)}<em>+${t.charge} Charge</em></b><p>${esc(t.text)}</p></div>`).join('')}</div>`
+        : `<p class="d-note">${s.kind === 'Signature' ? 'A Signature skill: the heart of its job, shaped by the job tree rather than talents.' : 'Rites have no talents: they shape the casts around them.'}</p>`}</div>`,
   });
   chips($('#skill-el'), [{ v: 'all', t: 'All elements' }, ...els.map(e => ({ v: e, t: EL[e], c: elColor(e) }))], v => { f.el = v; g.reset(); });
   chips($('#skill-kind'), [{ v: 'all', t: 'All kinds' }, { v: 'Skill', t: 'Skills' }, { v: 'Rite', t: 'Rites' }, { v: 'Ward', t: 'Ward rites' }, { v: 'Signature', t: 'Signatures' }], v => { f.kind = v; g.reset(); });

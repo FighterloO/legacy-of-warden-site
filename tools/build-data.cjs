@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Builds the site's data/*.json and copies the art it needs, straight from the game's own code.
    Usage: node tools/build-data.cjs "<path to the legacy-of-warden repo>"
-   Reads src/game/engine.js (skills), progression.js (gear, sets, Mythic sets), jobs.js (job trees) and
+   Reads src/game/engine.js (skills), talents.js (each skill's four talents), progression.js (gear, sets, Mythic sets), jobs.js (job trees) and
    forbidden-arts.js (Forbidden Arts). Only the icons the page shows are copied into img/. */
 'use strict';
 const fs = require('fs'), path = require('path');
@@ -13,7 +13,7 @@ if (!fs.existsSync(path.join(GAME, 'src', 'game', 'engine.js'))) {
   process.exit(1);
 }
 const req = f => require(path.join(GAME, 'src', 'game', f));
-const G = req('engine.js'), P = req('progression.js'), J = req('jobs.js'), F = req('forbidden-arts.js');
+const G = req('engine.js'), P = req('progression.js'), J = req('jobs.js'), F = req('forbidden-arts.js'), T = req('talents.js');
 const M = P.MYTHIC;
 
 // Copies one game asset to img/<sub>/<name> and returns the site path.
@@ -45,6 +45,10 @@ const skills = G.SPELLS.map(s => ({
   hits: (s.hits || []).length,
   tags: (s.tags || []).filter(t => !/^(MAIN|SIGNATURE)$/i.test(t)).map(t => t.toUpperCase()).filter(t => t.toLowerCase() !== s.element),
   text: s.riteText || s.description || s.card || '',
+  // The four talents, opened at skill level 4 / 8 / 12 / 15; each ritual slot uses one of them, or none.
+  talents: ((T.TALENTS.find(t => t.skill === s.id) || {}).tiers || []).map((t, i) => ({
+    name: t.name, level: T.TALENT_LEVELS[i], charge: t.charge, text: t.text, condition: t.condition || '',
+  })),
   img: art(s.art, 'skills', (s.signature ? 'sig-' + s.signature : 'skill-' + s.id) + '.webp'),
 }));
 
