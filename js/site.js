@@ -269,7 +269,7 @@ function planesSection(planes) {
     rail.querySelectorAll('.plane-tab').forEach((t, k) => t.setAttribute('aria-selected', k === i));
     view.style.setProperty('--pc', p.color);
     view.innerHTML = `
-      <div class="plane-shot"><img src="img/planes/plane-${p.id}.webp" alt="The expedition board on ${esc(p.name)}"></div>
+      <div class="plane-shot is-loading"><span class="shot-loader" aria-hidden="true"><i></i></span><img src="img/planes/plane-${p.id}.webp" alt="The expedition board on ${esc(p.name)}"></div>
       <div class="plane-info">
         <p class="plane-kicker">Plane ${p.id} · 25 Guardians</p>
         <h3>${esc(p.name)}</h3>
@@ -280,8 +280,12 @@ function planesSection(planes) {
         <div class="plane-fx">${p.effects.map((e, k) => `<button type="button" class="plane-chip" data-k="${k}" aria-pressed="${k === 0}">${esc(e.name)}</button>`).join('')}</div>
         <p class="plane-fx-text" aria-live="polite">${esc(p.effects[0] ? p.effects[0].text : '')}</p>
       </div>`;
-    const img = view.querySelector('.plane-shot img');
+    // A loading bar shows until the board has loaded, then the picture fades in (no alt text flashing in the meantime).
+    const shot = view.querySelector('.plane-shot'), img = shot.querySelector('img');
+    const ready = () => shot.classList.remove('is-loading');
+    img.addEventListener('load', ready);
     img.addEventListener('error', () => { img.src = `img/art/plane-wide-${p.id}.webp`; }, { once: true });
+    if (img.complete && img.naturalWidth) ready();
     const text = view.querySelector('.plane-fx-text');
     view.querySelector('.plane-fx').addEventListener('click', e => {
       const c = e.target.closest('.plane-chip');
@@ -292,6 +296,12 @@ function planesSection(planes) {
   }
   rail.addEventListener('click', e => { const t = e.target.closest('[data-p]'); if (t) show(+t.dataset.p); });
   show(0);
+  // Fetch all six boards in the background once the section is near, so switching planes is instant.
+  new IntersectionObserver((entries, obs) => {
+    if (!entries[0].isIntersecting) return;
+    obs.disconnect();
+    planes.forEach(p => { const im = new Image(); im.src = `img/planes/plane-${p.id}.webp`; });
+  }, { rootMargin: '600px 0px' }).observe(view);
 }
 
 // ---- Jobs: the game's job tree, every node clickable ---------------------------------------------------------------------
