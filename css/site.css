@@ -333,3 +333,5 @@ p{margin:0}
 .yt-frame{display:block;width:100%;border:0;background:#000}
 .yt-link{justify-self:start;margin-top:6px;font-size:14px;font-weight:600;text-decoration:none;color:var(--gold-hi);border-bottom:1px solid var(--line-gold)}
 .yt-link:hover{border-color:var(--gold)}
+.offer-support{margin-top:20px;padding-top:14px;border-top:1px solid rgba(255,90,106,.35);font-size:14px;line-height:1.5;color:#e9c9c4}
+.offer-support b{display:block;margin-bottom:2px;font-family:var(--serif);font-size:17px;color:#ffd9c2}
