@@ -36,6 +36,12 @@ ff -i "$GODOT/godot/assets/menu/warden-menu-bg.webp" -vf \
   "scale=1024:-1,crop=1024:500:0:(ih-500)/2-20,eq=brightness=-0.06:saturation=1.05,vignette=PI/4.2" \
   -frames:v 1 "$OUT/feature-1024x500-notitle.png"
 
+# 2b2. Play Games (PC) cover: 16:9, no text at all; the 600x400 logo is laid over its centre. The key art is 1672 x 941,
+#      so 1920 x 1080 is the honest size (a 4K copy would only be a blurry upscale).
+ff -i "$GODOT/godot/assets/menu/warden-menu-bg.webp" -vf \
+  "scale=1920:1080:flags=lanczos,eq=brightness=-0.05:saturation=1.05,vignette=PI/4.5,unsharp=5:5:0.4" \
+  -frames:v 1 "$OUT/pc-cover-1920x1080.png"
+
 # 2c. Play Games (PC) game-card logo: transparent 600 x 400, the title logo with padding and a soft dark glow
 #     so it reads on dark and bright art.
 ff -f lavfi -i "color=c=black@0:s=600x400,format=rgba" -i "$GODOT/godot/assets/menu/title-logo.webp" -filter_complex \
