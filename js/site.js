@@ -444,3 +444,33 @@ function itemsSection(items, sets, jobs) {
   const floor = new Promise(r => setTimeout(r, Math.max(0, 600 - performance.now())));
   Promise.race([Promise.all([videoReady, logoReady, fontsReady, dataReady.catch(() => {}), floor]), cap]).then(done);
 })();
+
+// ---- Music: the game's menu theme (AlkaKrab, Ambient 1, used with permission), off until the visitor turns it on ------------
+(function music() {
+  const btn = $('#music'), a = $('#music-track');
+  if (!btn || !a) return;
+  const VOL = 0.35;
+  let fade = null, on = false;
+  const ramp = (to, done) => {
+    clearInterval(fade);
+    fade = setInterval(() => {
+      const v = a.volume + (to > a.volume ? 0.03 : -0.05);
+      if ((to > a.volume && v >= to) || (to <= a.volume && v <= to)) { a.volume = to; clearInterval(fade); if (done) done(); }
+      else a.volume = Math.max(0, Math.min(1, v));
+    }, 50);
+  };
+  function set(play) {
+    on = play;
+    btn.setAttribute('aria-pressed', play);
+    btn.setAttribute('aria-label', play ? 'Stop the menu music' : 'Play the menu music');
+    try { sessionStorage.setItem('low-music', play ? '1' : '0'); } catch (e) {}
+    if (play) { a.volume = 0; a.play().then(() => ramp(VOL)).catch(() => set(false)); }
+    else ramp(0, () => a.pause());
+  }
+  btn.addEventListener('click', () => set(!on));
+  // A video starting (site video or a YouTube player) pauses the music.
+  document.addEventListener('play', e => { if (e.target !== a && on) set(false); }, true);
+  document.addEventListener('click', e => { if (e.target.closest('button.yt') && on) set(false); });
+  // Quiet while the tab is hidden; back on when it returns.
+  document.addEventListener('visibilitychange', () => { if (!on) return; if (document.hidden) a.pause(); else a.play().catch(() => {}); });
+})();

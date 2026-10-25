@@ -17,7 +17,7 @@
 <meta name="twitter:image" content="https://fighterloo.github.io/legacy-of-warden-site/img/art/share.jpg">
 <link rel="icon" href="favicon.png">
 <link rel="preload" href="fonts/dmsans.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/site.css?v=202610252059">
+<link rel="stylesheet" href="css/site.css?v=202610252251">
 </head>
 <body>
 <div class="splash" id="splash" aria-hidden="true">
@@ -298,15 +298,21 @@
   <p class="foot-links" id="links"></p>
   <p class="foot-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="press.html">Press kit</a></p>
   <p class="foot-contact">Info and questions: <span class="contact"></span></p>
+  <p class="fine">Music: "Ambient 1" by AlkaKrab, used with permission.</p>
   <p class="fine">© 2026 Baihaqi Studio. Third-party art and fonts under their own licences.</p>
 </footer>
+
+<button type="button" class="music" id="music" aria-pressed="false" aria-label="Play the menu music">
+  <span class="music-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="music-label">Music</span>
+</button>
+<audio id="music-track" src="media/audio/ambient-1.mp3" preload="none" loop></audio>
 
 <dialog class="sheet" id="sheet">
   <div class="sheet-body" id="sheet-body"></div>
   <div class="sheet-foot"><button class="btn" type="button" data-close>Back</button></div>
 </dialog>
 
-<script src="js/site.js?v=202610252059" defer></script>
-<script src="js/contact.js?v=202610252059" defer></script>
+<script src="js/site.js?v=202610252251" defer></script>
+<script src="js/contact.js?v=202610252251" defer></script>
 </body>
 </html>
