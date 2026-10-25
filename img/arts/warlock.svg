@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+<defs>
+<radialGradient id="bgc" cx="50%" cy="44%" r="56%"><stop offset="0" stop-color="#40122f"/><stop offset="0.68" stop-color="#1c0a20"/><stop offset="1" stop-color="#0b0610"/></radialGradient>
+<radialGradient id="glc" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#b04dff" stop-opacity="0.55"/><stop offset="1" stop-color="#b04dff" stop-opacity="0"/></radialGradient>
+</defs>
+<circle cx="48" cy="48" r="46" fill="url(#bgc)"/>
+<circle cx="48" cy="48" r="44.5" fill="none" stroke="#8a2448" stroke-width="2.6"/>
+<circle cx="48" cy="48" r="40.5" fill="none" stroke="#6a3590" stroke-width="1.3" stroke-dasharray="3.2 3.6"/>
+<path d="M48.0 4.9 L50.2 7.5 L48.0 10.1 L45.8 7.5 Z" fill="#c0507a"/><path d="M76.6 16.8 L78.8 19.4 L76.6 22.0 L74.4 19.4 Z" fill="#c0507a"/><path d="M88.5 45.4 L90.7 48.0 L88.5 50.6 L86.3 48.0 Z" fill="#c0507a"/><path d="M76.6 74.0 L78.8 76.6 L76.6 79.2 L74.4 76.6 Z" fill="#c0507a"/><path d="M48.0 85.9 L50.2 88.5 L48.0 91.1 L45.8 88.5 Z" fill="#c0507a"/><path d="M19.4 74.0 L21.6 76.6 L19.4 79.2 L17.2 76.6 Z" fill="#c0507a"/><path d="M7.5 45.4 L9.7 48.0 L7.5 50.6 L5.3 48.0 Z" fill="#c0507a"/><path d="M19.4 16.8 L21.6 19.4 L19.4 22.0 L17.2 19.4 Z" fill="#c0507a"/>
+<path d="M77 14 L71.5 22 L76 26.5 L68.5 34" fill="none" stroke="#0b0610" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M77 14 L71.5 22 L76 26.5 L68.5 34" fill="none" stroke="#ff9cc0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="48" cy="48" r="30" fill="url(#glc)"/>
+<path d="M31 70 V45 A17 17 0 0 1 65 45 V70 Z" fill="#14061c" stroke="#b04dff" stroke-width="2.6" stroke-linejoin="round"/>
+<path d="M36 70 C35 61 41 58 40 50 C45 55 46 49 48 44 C50 50 53 53 52 58 C55 56 57 52 57 49 C61 56 61 63 60 70 Z" fill="#ff7a2e"/>
+<path d="M41 70 C41 64 45 62 45 57 C48 61 48 58 50 55 C52 59 55 62 55 70 Z" fill="#ffd24a"/>
+<path d="M31 70 H65" stroke="#b04dff" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M40 31 Q48 25 56 31 Q48 37 40 31 Z" fill="#e3c2ff" stroke="#b04dff" stroke-width="1.4"/><circle cx="48" cy="31" r="2.4" fill="#2a0838"/>
+</svg>

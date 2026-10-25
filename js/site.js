@@ -323,7 +323,7 @@ function jobsSection(jobs) {
         <div class="tree">
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${edges.map(line).join('')}</svg>
           ${j.tree.map(n => `<button type="button" class="tnode t-${kind(n)}" data-n="${n.n}" style="left:${TREE_POS[n.n][0]}%;top:${TREE_POS[n.n][1]}%" aria-label="${esc(n.name)}"><img src="${n.img}" alt=""><i>${n.n}</i></button>`).join('')}
-          ${j.art ? `<button type="button" class="tnode t-art" data-n="art" style="left:${TREE_POS.art[0]}%;top:${TREE_POS.art[1]}%;--ac:${j.art.color}" aria-label="${esc(j.art.name)}"><span></span></button>` : ''}
+          ${j.art ? `<button type="button" class="tnode t-art" data-n="art" style="left:${TREE_POS.art[0]}%;top:${TREE_POS.art[1]}%;--ac:${j.art.color}" aria-label="${esc(j.art.name)}"><img src="img/arts/${j.id}.svg" alt=""></button>` : ''}
         </div>
         <div class="tdetail" aria-live="polite"></div>
       </div>`;
