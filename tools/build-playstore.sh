@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Builds the Google Play asset set from the Godot captures, and refreshes the site's in-game previews.
-# Usage: bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>" [--videos]
+# Usage: bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>"
 #   preview folder: holds godot-capture/{landscape,portrait,landscape-pc}; output goes to playstore-final/ next to it.
-#   --videos: also re-encodes the site videos from playstore-final/video/ (heavy: only when no Godot capture is running).
 # Needs ffmpeg. Run it again whenever the captures change.
 set -euo pipefail
 PREVIEW="${1:-D:/Github Project/legacy of warden preview}"
@@ -76,20 +75,6 @@ for name in "${!SITE_NAME[@]}"; do
   src="$CAP/landscape-pc/$name.png"; [ -f "$src" ] || src="$CAP/landscape/$name.png"
   [ -f "$src" ] && ff -i "$src" -vf "scale=1280:-2" -quality 80 "$SITE/img/shots/${SITE_NAME[$name]}.webp"
 done
-
-# 5. Site videos (only with --videos): web re-encodes of playstore-final/video/, each with a poster at its best moment
-#    (overview: the Sunfall pillar). The combo videos are YouTube embeds (data-yt in index.html); their posters
-#    media/combo-*.webp are frames of combo-landscape at 43 s and combo-portrait at 36 s.
-if [[ " $* " == *" --videos "* ]]; then
-  VID="$OUT/video"
-  enc() { # name, width, crf, poster second
-    [ -f "$VID/$1.mp4" ] || { echo "skip $1 (not in $VID)"; return; }
-    ff -i "$VID/$1.mp4" -c:v libx264 -crf "$3" -preset slow -vf "scale=$2:-2" -c:a aac -b:a 128k -movflags +faststart "$SITE/media/$1.mp4"
-    ff -ss "$4" -i "$VID/$1.mp4" -frames:v 1 -vf "scale=$2:-2" -quality 80 "$SITE/media/$1.webp"
-  }
-  enc overview-pc 1280 27 60
-  enc overview-phone 720 28 60
-fi
 
 echo "Play Store set: $OUT"
 find "$OUT" -type f | sed "s|$OUT/||" | sort

@@ -14,7 +14,7 @@ data/*.json       generated from the game's code (do not edit by hand)
 img/skills, img/items, img/nodes, img/jobs   generated: only the art the data points at
 img/shots         8 in-game previews (webp, from the Godot captures)
 img/art           logo, key art, plane strips, icon
-media/            hero loop, overview (pc + phone) videos, posters (combo videos are on YouTube)
+media/            hero loop video and the video posters (the videos themselves are on YouTube)
 tools/build-data.cjs   the data generator
 ```
 
@@ -47,11 +47,12 @@ and push; Pages updates in a minute or two.
 - In-game previews and the Google Play set: `bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>"` reads the Godot
   captures in `<preview folder>/godot-capture/{landscape,portrait,landscape-pc}`, writes `<preview folder>/playstore-final/`
   (icon, feature graphic, phone, phone-captioned, tablet-7, tablet-10, pc) and refreshes `img/shots/`. Captions: `SHOTS` in `js/site.js`.
-- Videos: the trailer shows both cuts side by side, from the site: `media/overview-pc.mp4` (autoplays muted) and
-  `media/overview-phone.mp4` (`--videos` on `tools/build-playstore.sh` re-encodes them from
-  `<preview folder>/playstore-final/video/`). The two combo videos are YouTube embeds: the `data-yt` id on each
-  `button.yt` in `index.html`, with a local poster (`media/combo-*.webp`); the player loads only on click, from
-  youtube-nocookie.com. YouTube: trailer UXdxQr5TOxw, trailer Short yTMTXW3Ryb0, Spellblade aBvcbKpanhw, Alchemist Short v32cvDzky3Y.
+- Videos: the trailer and the job overviews are YouTube embeds: the `data-yt` id on each `button.yt` in `index.html`,
+  with a local poster in `media/`. The player loads only on click, from youtube-nocookie.com. YouTube: trailer
+  UXdxQr5TOxw, trailer Short yTMTXW3Ryb0, Spellblade aBvcbKpanhw, Alchemist Short v32cvDzky3Y.
+  A video hosted on the site itself (like `media/hero-loop.mp4`) must be H.264 with `-pix_fmt yuv420p`: Godot captures come
+  out as 4:4:4, which most browsers refuse ("file is corrupt"). Example:
+  `ffmpeg -i in.mp4 -c:v libx264 -pix_fmt yuv420p -crf 27 -preset slow -vf scale=1280:-2 -an -movflags +faststart out.mp4`.
 - Platforms: `img/devices/{phone,tablet,pc}.webp` are the phone, tablet and PC captures shown in the CSS device frames.
 - Release and DLC text: the `#release` section of `index.html`.
 

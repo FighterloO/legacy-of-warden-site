@@ -161,13 +161,7 @@ $('#planes-list').innerHTML = PLANES.map((n, i) =>
 $('#links').innerHTML = LINKS.filter(l => l.url).map(l => `<a href="${esc(l.url)}" rel="noopener">${esc(l.label)}</a>`).join('') ||
   '<span class="fine" style="margin:0">Store page coming soon.</span>';
 
-// The landscape trailer autoplays muted, and pauses while it is off screen.
-document.querySelectorAll('video.trailer-video[autoplay]').forEach(v => {
-  if (reduced) { v.removeAttribute('autoplay'); return; }
-  new IntersectionObserver(([e]) => { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }).observe(v);
-});
-
-// Combo videos live on YouTube. Only the local poster shows until the viewer presses play; then the privacy-enhanced
+// The trailer and job overview videos live on YouTube. Only the local poster shows until the viewer presses play; then the privacy-enhanced
 // player (youtube-nocookie) is loaded in its place, so the page makes no YouTube request before that.
 document.querySelectorAll('button.yt').forEach(b => b.addEventListener('click', () => {
   document.querySelectorAll('video').forEach(v => v.pause());

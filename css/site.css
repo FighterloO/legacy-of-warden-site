@@ -359,3 +359,9 @@ p{margin:0}
 .offline-facts{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px}
 .offline-facts li{position:relative;padding-left:16px;font-weight:600;color:var(--gold-hi);font-size:14px;letter-spacing:.04em}
 .offline-facts li::before{content:"";position:absolute;left:0;top:.45em;width:7px;height:7px;background:var(--gold);transform:rotate(45deg)}
+/* Trailer blocks: a heading per block, rows alternate wide-tall then tall-wide */
+.video-block{font-size:20px;margin:30px 0 0;color:var(--gold-hi);display:flex;align-items:center;gap:12px}
+.video-block::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line-gold),transparent)}
+.video-block:first-of-type{margin-top:0}
+.combo-pair{margin-top:12px}
+@media (min-width:760px){.combo-pair.flip{grid-template-columns:1fr 3.16fr}}
