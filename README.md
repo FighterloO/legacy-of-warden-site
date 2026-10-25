@@ -12,9 +12,9 @@ css/site.css      styles (game palette: dark navy, gold, bronze)
 js/site.js        skills / items / jobs browsers, gallery, links (LINKS at the top)
 data/*.json       generated from the game's code (do not edit by hand)
 img/skills, img/items, img/nodes, img/jobs   generated: only the art the data points at
-img/shots         8 in-game screenshots (webp, from the trailer frames)
+img/shots         8 in-game previews (webp, from the Godot captures)
 img/art           logo, key art, plane strips, icon
-media/            web-size trailer clips and posters
+media/            hero loop, overview (pc + phone) and combo videos with posters
 tools/build-data.cjs   the data generator
 ```
 
@@ -47,7 +47,7 @@ and push; Pages updates in a minute or two.
 - In-game previews and the Google Play set: `bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>"` reads the Godot
   captures in `<preview folder>/godot-capture/{landscape,portrait,landscape-pc}`, writes `<preview folder>/playstore-final/`
   (icon, feature graphic, phone, phone-captioned, tablet-7, tablet-10, pc) and refreshes `img/shots/`. Captions: `SHOTS` in `js/site.js`.
-- Trailer clips: `media/*.mp4` (keep each under ~10 MB; 720p, H.264, `-movflags +faststart`).
+- Videos: `media/overview-pc.mp4` + `overview-phone.mp4` (picked by screen orientation), `media/combo-landscape.mp4` and `combo-portrait.mp4` (a missing file hides its slot). Each needs a `.webp` poster with the same name. Keep each under ~10 MB: `ffmpeg -i in.mp4 -c:v libx264 -crf 27 -preset slow -vf scale=1280:-2 -c:a aac -b:a 128k -movflags +faststart out.mp4`.
 - Release and DLC text: the `#release` section of `index.html`.
 
 ## Publish on GitHub Pages
