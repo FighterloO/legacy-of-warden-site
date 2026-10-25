@@ -320,3 +320,16 @@ p{margin:0}
 @media (min-width:760px){.combo-pair{grid-template-columns:3.16fr 1fr}}
 @media (max-width:759px){.combo-tall{max-width:360px;width:100%;justify-self:center}}
 .overview[hidden]{display:none}
+
+/* YouTube click-to-play: local poster with a play mark (a triangle on a plate, no circle) */
+.yt{position:relative;display:block;width:100%;padding:0;border:0;background:#000;cursor:pointer;touch-action:manipulation}
+.combo-wide .yt,.combo-wide .yt-frame{aspect-ratio:16/9}
+.combo-tall .yt,.combo-tall .yt-frame{aspect-ratio:9/16;max-height:78vh}
+.yt img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s,filter .4s}
+.yt:hover img{transform:scale(1.03);filter:brightness(1.1)}
+.yt-play{position:absolute;left:50%;top:50%;width:76px;height:52px;margin:-26px 0 0 -38px;background:linear-gradient(180deg,rgba(230,200,140,.95),rgba(180,135,70,.95));border:1px solid #f1d9a0;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.6);transition:transform .2s}
+.yt-play::after{content:"";position:absolute;left:31px;top:15px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #1c1408}
+.yt:hover .yt-play{transform:scale(1.08)}
+.yt-frame{display:block;width:100%;border:0;background:#000}
+.yt-link{justify-self:start;margin-top:6px;font-size:14px;font-weight:600;text-decoration:none;color:var(--gold-hi);border-bottom:1px solid var(--line-gold)}
+.yt-link:hover{border-color:var(--gold)}

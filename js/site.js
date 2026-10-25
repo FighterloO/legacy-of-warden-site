@@ -4,7 +4,7 @@
 // Links in the footer. Fill in the Play Store and other URLs when they exist; empty ones are hidden.
 const LINKS = [
   { label: 'Google Play', url: '' },
-  { label: 'YouTube trailer', url: '' },
+  { label: 'YouTube trailer', url: 'https://youtu.be/UXdxQr5TOxw' },
   { label: 'Contact', url: '' },
 ];
 
@@ -191,13 +191,28 @@ $('#links').innerHTML = LINKS.filter(l => l.url).map(l => `<a href="${esc(l.url)
   portrait.addEventListener('change', () => vids.forEach(pick));
 })();
 
-// Combo videos that are not uploaded yet hide themselves.
-document.querySelectorAll('video.combo-video').forEach(v => {
-  const hide = () => { v.closest('figure').hidden = true; };
-  // The 404 may already have happened before this script ran.
-  if (v.error || v.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) hide();
-  v.addEventListener('error', hide);
-});
+// Combo videos live on YouTube. Only the local poster shows until the viewer presses play; then the privacy-enhanced
+// player (youtube-nocookie) is loaded in its place, so the page makes no YouTube request before that.
+document.querySelectorAll('button.yt').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('video').forEach(v => v.pause());
+  const f = document.createElement('iframe');
+  f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
+  f.title = b.getAttribute('aria-label');
+  f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+  f.allowFullscreen = true;
+  f.className = 'yt-frame';
+  b.replaceWith(f);
+}));
+
+// The overview's YouTube link follows the screen: the Shorts cut in portrait, the trailer in landscape.
+(function trailerLink() {
+  const a = $('#trailer-yt');
+  if (!a) return;
+  const portrait = matchMedia('(orientation: portrait)');
+  const set = () => { a.href = portrait.matches ? a.dataset.phone : a.dataset.pc; };
+  portrait.addEventListener('change', set);
+  set();
+})();
 
 // Only one video plays at a time.
 document.querySelectorAll('video').forEach(v => v.addEventListener('play', () =>

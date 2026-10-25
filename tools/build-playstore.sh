@@ -78,7 +78,8 @@ for name in "${!SITE_NAME[@]}"; do
 done
 
 # 5. Site videos (only with --videos): web re-encodes of playstore-final/video/, each with a poster at its best moment
-#    (overview: the Sunfall pillar; combos: Bladestorm and the Overdose).
+#    (overview: the Sunfall pillar). The combo videos are YouTube embeds (data-yt in index.html); their posters
+#    media/combo-*.webp are frames of combo-landscape at 43 s and combo-portrait at 36 s.
 if [[ " $* " == *" --videos "* ]]; then
   VID="$OUT/video"
   enc() { # name, width, crf, poster second
@@ -88,8 +89,6 @@ if [[ " $* " == *" --videos "* ]]; then
   }
   enc overview-pc 1280 27 60
   enc overview-phone 720 28 60
-  enc combo-landscape 1280 27 43
-  enc combo-portrait 720 28 36
 fi
 
 echo "Play Store set: $OUT"

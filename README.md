@@ -14,7 +14,7 @@ data/*.json       generated from the game's code (do not edit by hand)
 img/skills, img/items, img/nodes, img/jobs   generated: only the art the data points at
 img/shots         8 in-game previews (webp, from the Godot captures)
 img/art           logo, key art, plane strips, icon
-media/            hero loop, overview (pc + phone) and combo videos with posters
+media/            hero loop, overview (pc + phone) videos, posters (combo videos are on YouTube)
 tools/build-data.cjs   the data generator
 ```
 
@@ -47,7 +47,11 @@ and push; Pages updates in a minute or two.
 - In-game previews and the Google Play set: `bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>"` reads the Godot
   captures in `<preview folder>/godot-capture/{landscape,portrait,landscape-pc}`, writes `<preview folder>/playstore-final/`
   (icon, feature graphic, phone, phone-captioned, tablet-7, tablet-10, pc) and refreshes `img/shots/`. Captions: `SHOTS` in `js/site.js`.
-- Videos: the source files live in `<preview folder>/playstore-final/video/` (overview-pc, overview-phone, combo-landscape, combo-portrait). `bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>" --videos` re-encodes them into `media/` (about 4-11 MB each) with posters. The overview picks the PC or phone cut by screen orientation; a missing combo file hides its slot. Run `--videos` only when no Godot capture is running (RAM).
+- Videos: the overview plays from the site (`media/overview-pc.mp4` / `overview-phone.mp4`, picked by screen orientation;
+  `--videos` on `tools/build-playstore.sh` re-encodes them from `<preview folder>/playstore-final/video/`). The two combo
+  videos are YouTube embeds: the `data-yt` id on each `button.yt` in `index.html`, with a local poster (`media/combo-*.webp`);
+  the player loads only on click, from youtube-nocookie.com. YouTube links: trailer UXdxQr5TOxw, trailer Shorts yTMTXW3Ryb0,
+  Spellblade aBvcbKpanhw, Alchemist Shorts v32cvDzky3Y.
 - Release and DLC text: the `#release` section of `index.html`.
 
 ## Publish on GitHub Pages
