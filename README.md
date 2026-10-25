@@ -44,7 +44,9 @@ and push; Pages updates in a minute or two.
 - Contact email: `CONTACT_EMAIL` in `js/contact.js`.
 - Privacy Policy: `privacy.html`. Its Play Console URL is https://fighterloo.github.io/legacy-of-warden-site/privacy.html. Keep it in step with the Data safety form.
 - Store and video links: `LINKS` at the top of `js/site.js` (empty links stay hidden).
-- Screenshots: replace the files in `img/shots/` (1280 x 720 webp) and the `SHOTS` list in `js/site.js`.
+- In-game previews and the Google Play set: `bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>"` reads the Godot
+  captures in `<preview folder>/godot-capture/{landscape,portrait,landscape-pc}`, writes `<preview folder>/playstore-final/`
+  (icon, feature graphic, phone, phone-captioned, tablet-7, tablet-10, pc) and refreshes `img/shots/`. Captions: `SHOTS` in `js/site.js`.
 - Trailer clips: `media/*.mp4` (keep each under ~10 MB; 720p, H.264, `-movflags +faststart`).
 - Release and DLC text: the `#release` section of `index.html`.
 
