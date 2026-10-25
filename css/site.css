@@ -207,8 +207,13 @@ p{margin:0}
 /* Card grid: skills and items are literal cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 @media (min-width:700px){.grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}}
-.card{position:relative;text-align:left;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-top:2px solid var(--c,var(--line-gold));padding:10px;color:var(--ink);font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:6px;touch-action:manipulation;transition:border-color .15s,transform .15s}
-.card:hover{border-color:var(--c,var(--gold));transform:translateY(-2px)}
+.card{position:relative;text-align:left;background:linear-gradient(180deg,rgba(36,30,54,.94),rgba(20,16,32,.94));background-clip:padding-box;border:10px solid transparent;border-image:url(../img/ui/frame-gold-notch.webp) 52 / 10px / 0 stretch;padding:8px 8px 10px;color:var(--ink);font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:6px;touch-action:manipulation;transition:transform .2s,filter .2s;isolation:isolate}
+/* Game card frames by rank: silver for common cards and rites, gold notch for skills and Legendary/Set, gold spike for Mythical and Signatures */
+.card[data-frame=silver]{border-image-source:url(../img/ui/frame-silver.webp)}
+.card[data-frame=spike]{border-image-source:url(../img/ui/frame-gold-spike.webp)}
+/* The element or tier colour glows softly from the top inside the frame */
+.card::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(120% 70% at 50% 0%,color-mix(in srgb,var(--c,#d9ba78) 30%,transparent),transparent 70%);pointer-events:none}
+.card:hover{transform:translateY(-3px);filter:brightness(1.12) drop-shadow(0 6px 14px color-mix(in srgb,var(--c,#d9ba78) 35%,transparent))}
 .card-top{display:flex;gap:10px;align-items:center}
 .card img{width:52px;height:52px;flex:none;object-fit:contain}
 .card b{font-size:15px;line-height:1.2;display:block}

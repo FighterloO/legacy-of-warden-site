@@ -250,7 +250,7 @@ function skillsSection(skills, jobs) {
     grid: $('#skill-grid'), count: $('#skill-count'), noun: 'skill', list: skills,
     match: s => (f.el === 'all' || s.element === f.el) && (f.kind === 'all' || s.kind.startsWith(f.kind)) &&
       (!f.q || (s.name + ' ' + s.text + ' ' + s.tags.join(' ')).toLowerCase().includes(f.q)),
-    card: (s, i) => `<button type="button" class="card" data-i="${i}" style="--c:${elColor(s.element)}">
+    card: (s, i) => `<button type="button" class="card" data-i="${i}" data-frame="${s.kind === 'Signature' ? 'spike' : s.kind === 'Skill' ? 'notch' : 'silver'}" style="--c:${elColor(s.element)}">
       <span class="card-top"><img src="${s.img}" alt="" loading="lazy"><span><b>${esc(s.name)}</b><small>${EL[s.element] || ''} · ${s.job ? jobName(s.job) : s.kind}</small></span></span>
       <p>${esc(s.text)}</p></button>`,
     detail: s => `<div style="--c:${elColor(s.element)}">
@@ -280,7 +280,7 @@ function itemsSection(items, sets, jobs) {
     grid: $('#item-grid'), count: $('#item-count'), noun: 'item', list: order,
     match: it => (f.slot === 'all' || it.slot === f.slot) && (f.tier === 'all' || it.rarity === +f.tier) &&
       (!f.q || (it.name + ' ' + it.stats.join(' ') + ' ' + (it.unique ? it.unique.text : '') + ' ' + (it.set ? (sets[it.set] || {}).name : '')).toLowerCase().includes(f.q)),
-    card: (it, i) => `<button type="button" class="card" data-i="${i}" style="--c:${TIER_COLOR[it.rarity]}">
+    card: (it, i) => `<button type="button" class="card" data-i="${i}" data-frame="${it.rarity >= 5 ? 'spike' : it.rarity >= 3 ? 'notch' : 'silver'}" style="--c:${TIER_COLOR[it.rarity]}">
       <span class="card-top"><img src="${it.img}" alt="" loading="lazy"><span><b>${esc(it.name)}</b><small>${esc(it.tier)} ${cap(it.slot)}</small></span></span>
       <p>${esc(it.unique ? it.unique.text : it.stats.join(' · ') || it.flavor)}</p></button>`,
     detail: it => `<div style="--c:${TIER_COLOR[it.rarity]}">
