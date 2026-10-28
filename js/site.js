@@ -237,6 +237,13 @@ function cardGrid({ grid, count, noun, list, match, card, detail }) {
   return { render, reset() { shown = PAGE; render(); } };
 }
 
+// A #link (./#release from the Bloodmoon page) is lost while the splash locks the page and the grids above are still empty,
+// so it is followed again once the data is in and once the splash is gone.
+function jumpToHash() {
+  const target = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
+  if (target) setTimeout(() => target.scrollIntoView({ block: 'start', behavior: 'instant' }), 50);
+}
+
 // ---- Data -----------------------------------------------------------------------------------------------------------------
 // no-cache: the browser re-checks the file with the server, so new data shows right after a push.
 const load = f => fetch('data/' + f, { cache: 'no-cache' }).then(r => r.json());
@@ -247,6 +254,7 @@ dataReady.then(([skills, items, sets, jobs, stats, planes]) => {
   jobsSection(jobs);
   skillsSection(skills, jobs);
   itemsSection(items, sets, jobs);
+  jumpToHash();
 }).catch(err => {
   console.error(err);
   for (const id of ['#skill-count', '#item-count']) $(id).textContent = 'Data could not load. Open the page through a web server (see README).';
@@ -426,13 +434,14 @@ function itemsSection(items, sets, jobs) {
   const el = $('#splash'), root = document.documentElement;
   const done = () => {
     root.classList.remove('loading');
+    jumpToHash();
     if (!el) return;
     el.classList.add('out');
     setTimeout(() => el.remove(), 700);
   };
   let seen = false;
   try { seen = sessionStorage.getItem('low-splash') === '1'; sessionStorage.setItem('low-splash', '1'); } catch (e) {}
-  if (!el || seen) { if (el) el.remove(); root.classList.remove('loading'); return; }
+  if (!el || seen) { if (el) el.remove(); root.classList.remove('loading'); jumpToHash(); return; }
   const video = document.querySelector('.hero-bg');
   const videoReady = !video || video.readyState >= 2 ? Promise.resolve()
     : new Promise(r => { video.addEventListener('loadeddata', r, { once: true }); video.addEventListener('error', r, { once: true }); });

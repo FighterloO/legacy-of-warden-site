@@ -567,3 +567,5 @@ html.loading .hero *{animation-play-state:paused}
 @media (min-width:900px){.bm-sky{aspect-ratio:auto}}
 @media (min-width:640px){.bm-rift{grid-column:span 2}.bm-rift img{aspect-ratio:32/9}}
 @media (min-width:1040px){.bm-rift img{position:absolute;inset:0;height:100%;aspect-ratio:auto}}
+/* Bloodmoon page: a lighter red veil, so each section's backdrop reads as its own place */
+body.bm-page .bd-shade{background:radial-gradient(ellipse at 50% 35%,rgba(50,6,16,.25) 0%,rgba(20,4,10,.62) 70%,rgba(10,4,8,.85) 100%),linear-gradient(180deg,rgba(40,4,12,.3),rgba(12,6,10,.55))}
