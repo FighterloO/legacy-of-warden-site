@@ -4,7 +4,7 @@
 // Links in the footer. Fill in the Play Store and other URLs when they exist; empty ones are hidden.
 const LINKS = [
   { label: 'Google Play', url: '' },
-  { label: 'YouTube trailer', url: 'https://youtu.be/UXdxQr5TOxw' },
+  { label: 'YouTube trailer', url: 'https://youtu.be/bfzNsBtPULc' },
   { label: 'Contact', url: '' },
 ];
 
