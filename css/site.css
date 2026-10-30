@@ -569,3 +569,10 @@ html.loading .hero *{animation-play-state:paused}
 @media (min-width:1040px){.bm-rift img{position:absolute;inset:0;height:100%;aspect-ratio:auto}}
 /* Bloodmoon page: a lighter red veil, so each section's backdrop reads as its own place */
 body.bm-page .bd-shade{background:radial-gradient(ellipse at 50% 35%,rgba(50,6,16,.25) 0%,rgba(20,4,10,.62) 70%,rgba(10,4,8,.85) 100%),linear-gradient(180deg,rgba(40,4,12,.3),rgba(12,6,10,.55))}
+
+/* Back to top (js/top.js): bottom right, opposite the music button, shown after the first screen */
+.to-top{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;display:flex;align-items:center;justify-content:center;gap:8px;height:42px;min-width:42px;padding:0 14px 0 12px;border:1px solid var(--line-gold);background:rgba(14,11,24,.9);color:var(--gold-hi);font:600 13px var(--sans);cursor:pointer;border-radius:var(--r);box-shadow:0 6px 18px rgba(0,0,0,.5);touch-action:manipulation;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s,transform .25s,visibility .25s,border-color .2s}
+.to-top.on{opacity:1;visibility:visible;transform:none}
+.to-top:hover{border-color:var(--gold)}
+.to-top i{width:9px;height:9px;border-left:2px solid var(--gold);border-top:2px solid var(--gold);transform:translateY(2px) rotate(45deg)}
+@media (max-width:600px){.to-top span{display:none}.to-top{padding:0}}
