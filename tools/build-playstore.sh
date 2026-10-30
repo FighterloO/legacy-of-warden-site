@@ -70,7 +70,8 @@ done
 
 # 4. Site previews (img/shots, 1280 x 720 webp): each shot from the PC set when captured, else the landscape set.
 declare -A SITE_NAME=([1-board]=01-expedition-board [2-moonhaven]=02-moonhaven [3-ritual]=03-ritual [4-fight]=04-combo
-  [5-art]=05-forbidden-art-sunfall [6-realm]=06-realm [7-map]=07-realm-map [8-duel]=08-ritual-duel)
+  [5-art]=05-forbidden-art-sunfall [6-realm]=06-realm [7-map]=07-realm-map [8-duel]=08-ritual-duel
+  [12-stash]=09-gear-stash)
 for name in "${!SITE_NAME[@]}"; do
   src="$CAP/landscape-pc/$name.png"; [ -f "$src" ] || src="$CAP/landscape/$name.png"
   [ -f "$src" ] && ff -i "$src" -vf "scale=1280:-2" -quality 80 "$SITE/img/shots/${SITE_NAME[$name]}.webp"
