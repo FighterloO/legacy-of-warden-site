@@ -12,7 +12,7 @@ css/site.css      styles (game palette: dark navy, gold, bronze)
 js/site.js        skills / items / jobs browsers, gallery, links (LINKS at the top)
 data/*.json       generated from the game's code (do not edit by hand)
 img/skills, img/items, img/nodes, img/jobs   generated: only the art the data points at
-img/shots         8 in-game previews (webp, from the Godot captures)
+img/shots         9 in-game previews (webp, from the Godot captures)
 img/art           logo, key art, plane strips, icon
 media/            hero loop video and the video posters (the videos themselves are on YouTube)
 tools/build-data.cjs   the data generator

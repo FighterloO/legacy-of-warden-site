@@ -17,6 +17,7 @@ const SHOTS = [
   ['06-realm', 'The Endless Realm', 'An island under fog, full of lairs, towns and rivals.'],
   ['07-realm-map', 'Map of the Realm', 'One island, many regions, thirty bosses.'],
   ['08-ritual-duel', 'Ritual Duel', 'Your own spells, played as cards against rival Wardens.'],
+  ['09-gear-stash', 'Gear & Stash', 'Weapons, robes and charms, enchanted to +20 and saved as setups.'],
 ];
 const EL = { fire: 'Fire', ice: 'Ice', lightning: 'Lightning', chaos: 'Chaos', physical: 'Physical', ward: 'Ward' };
 const TIER_COLOR = ['#b8c4cc', '#82d997', '#c19aff', '#ffa64d', '#e86ad6', '#ff6a3d'];
