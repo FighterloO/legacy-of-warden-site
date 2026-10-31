@@ -47,9 +47,10 @@ and push; Pages updates in a minute or two.
 - In-game previews and the Google Play set: `bash tools/build-playstore.sh "<preview folder>" "<godot-port repo>"` reads the Godot
   captures in `<preview folder>/godot-capture/{landscape,portrait,landscape-pc}`, writes `<preview folder>/playstore-final/`
   (icon, feature graphic, phone, phone-captioned, tablet-7, tablet-10, pc) and refreshes `img/shots/`. Captions: `SHOTS` in `js/site.js`.
-- Videos: the trailer and the job overviews are YouTube embeds: the `data-yt` id on each `button.yt` in `index.html`,
+- Videos: the trailer and the careless-vs-planned combos are YouTube embeds: the `data-yt` id on each `button.yt` in `index.html`,
   with a local poster in `media/`. The player loads only on click, from youtube-nocookie.com. YouTube: trailer
-  bfzNsBtPULc, trailer Short 7WqC5J67-jQ, Spellblade aBvcbKpanhw, Alchemist Short v32cvDzky3Y.
+  ZIGFAp2W-pY, trailer Short VYiky-fPafA, combo (Archmage) Y70X74ScpZc, combo Short (Spellblade) PRq2uYSpnFE
+  (trailer v3, 31 Oct 2026; posters `media/*-v3.webp` cut from the v3 videos).
   A video hosted on the site itself (like `media/hero-loop.mp4`) must be H.264 with `-pix_fmt yuv420p`: Godot captures come
   out as 4:4:4, which most browsers refuse ("file is corrupt"). Example:
   `ffmpeg -i in.mp4 -c:v libx264 -pix_fmt yuv420p -crf 27 -preset slow -vf scale=1280:-2 -an -movflags +faststart out.mp4`.
