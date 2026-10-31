@@ -16,7 +16,7 @@ const SHOTS = [
   ['05-forbidden-art-sunfall', 'Forbidden Art: Sunfall', 'A pillar of sunlight, a rain of meteors, a falling sun.'],
   ['06-realm', 'The Endless Realm', 'An island under fog, full of lairs, towns and rivals.'],
   ['07-realm-map', 'Map of the Realm', 'One island, many regions, thirty bosses.'],
-  ['08-ritual-duel', 'Ritual Duel', 'Your own spells, played as cards against rival Wardens.'],
+  ['08-realm-town', 'Realm Towns', 'Inns, docks, merchants and folk with their own stories, out in the Endless Realm.'],
   ['09-gear-stash', 'Gear & Stash', 'Weapons, robes and charms, enchanted to +20 and saved as setups.'],
 ];
 const EL = { fire: 'Fire', ice: 'Ice', lightning: 'Lightning', chaos: 'Chaos', physical: 'Physical', ward: 'Ward' };
