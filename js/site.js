@@ -103,8 +103,16 @@ watchReveal(document);
     cx.setTransform(dpr, 0, 0, dpr, 0, 0);
     motes = Array.from({ length: count() }, () => spawn(Math.random() * h));
   }
+  // Only while the hero is on screen: a full-window canvas redrawn under the scroll is what made phones stutter.
+  let live = true, running = false;
+  const hero = document.querySelector('.hero');
+  const start = () => { if (!running && live && !document.hidden) { running = true; requestAnimationFrame(frame); } };
+  if (hero) new IntersectionObserver(([e]) => {
+    live = e.isIntersecting;
+    if (live) start(); else cx.clearRect(0, 0, w, h);
+  }).observe(hero);
   function frame(t) {
-    if (document.hidden) return;
+    if (document.hidden || !live) { running = false; return; }
     requestAnimationFrame(frame);
     if (t - lastDraw < 32) return;
     lastDraw = t;
@@ -120,8 +128,8 @@ watchReveal(document);
   }
   size();
   addEventListener('resize', size);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) requestAnimationFrame(frame); });
-  requestAnimationFrame(frame);
+  document.addEventListener('visibilitychange', start);
+  start();
 })();
 
 // ---- Screenshot showcase: big slide with caption, thumbnails, swipe, auto-advance -------------------------------------------------
