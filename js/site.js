@@ -3,7 +3,7 @@
 
 // Links in the footer. Fill in the Play Store and other URLs when they exist; empty ones are hidden.
 const LINKS = [
-  { label: 'Google Play', url: '' },
+  { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.legacyofwarden.game' },
   { label: 'Baihaqi Studio', url: 'https://fighterloo.github.io/' },
   { label: 'Contact', url: '' },
 ];
