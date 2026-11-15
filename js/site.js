@@ -28,6 +28,16 @@ const PAGE = 24;
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const elColor = el => el ? `var(--${el})` : 'var(--gold)';
+// The game's coloured words (RichWords: {n:+20%}, {fire:ignite}, {note:(max 10)}), one point a line, as the game draws them.
+// inline: the points run on one line with " · " between (a card's preview); otherwise a list once there are two or more.
+const RW = /\{(n|fire|ice|lightning|chaos|physical|note):([^}]*)\}/g;
+const rwLine = l => esc(l).replace(RW, (m, k, v) => `<span class="rw-${k}">${v}</span>`);
+const plainText = s => String(s ?? '').replace(RW, '$2');
+function rich(s, inline) {
+  const lines = String(s ?? '').split('\n').filter(l => l.trim());
+  if (inline) return lines.map(rwLine).join(' · ');
+  return lines.length < 2 ? `<p>${rwLine(lines[0] || '')}</p>` : `<ul class="rw">${lines.map(l => `<li>${rwLine(l)}</li>`).join('')}</ul>`;
+}
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : '';
 
 // ---- Detail sheet ------------------------------------------------------------------------------------------------------
@@ -328,14 +338,14 @@ const TREE_POS = { 1: [7, 50], 2: [21, 50], 3: [35, 15], 5: [51, 15], 7: [67, 15
 function jobsSection(jobs) {
   const tabs = $('#job-tabs'), panel = $('#job-panel');
   tabs.innerHTML = jobs.map((j, i) =>
-    `<button type="button" class="tab" role="tab" data-j="${i}" aria-selected="${i === 0}"><img src="${j.icon}" alt="">${esc(j.name)}</button>`).join('');
+    `<button type="button" class="tab" role="tab" data-j="${i}" aria-selected="${i === 0}"><img src="${j.icon}" alt="">${esc(j.name)}${j.dlc ? '<sup class="dlc-tag">DLC</sup>' : ''}</button>`).join('');
   function show(i) {
     const j = jobs[i];
     tabs.querySelectorAll('.tab').forEach((t, k) => t.setAttribute('aria-selected', k === i));
     panel.style.setProperty('--jc', j.color);
     // The backdrop shows this job's sanctum while the Jobs section is on screen.
     const sec = $('#jobs');
-    sec.dataset.bg = 'img/bg/job-' + j.id + '.webp';
+    sec.dataset.bg = j.bg || 'img/bg/job-' + j.id + '.webp';
     if (bdUrl && bdUrl.includes('/job-')) setBackdrop(sec.dataset.bg);
     const edges = [...j.edges, ...j.caps.map(c => [c, 'art'])];
     const line = ([a, b]) => { const [x1, y1] = TREE_POS[a], [x2, y2] = TREE_POS[b]; return `<line data-a="${a}" data-b="${b}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; };
@@ -346,6 +356,7 @@ function jobsSection(jobs) {
         <h3>${esc(j.name)}</h3>
         <p class="job-gauge">${esc(j.gauge)} gauge</p>
         <p class="job-focus">${esc(j.focus)}</p>
+        ${j.dlc ? '<p class="job-dlc"><a href="bloodmoon.html">Bloodmoon Realm pack</a></p>' : ''}
       </div>
       <div class="job-main">
         <div class="tree">
@@ -365,11 +376,11 @@ function jobsSection(jobs) {
       panel.querySelectorAll('.tree line').forEach(l => l.classList.toggle('lit', lit.has(l.dataset.a) && lit.has(l.dataset.b)));
       if (n === 'art') {
         detail.style.setProperty('--dc', j.art.color);
-        detail.innerHTML = `<p class="tkind">Forbidden Art</p><b>${esc(j.art.name)}</b><p>${esc(j.art.short)}</p>`;
+        detail.innerHTML = `<p class="tkind">Forbidden Art</p><b>${esc(j.art.name)}</b><p class="tshort">${rwLine(j.art.short || '')}</p>${rich(j.art.text)}`;
       } else {
         const node = j.tree.find(x => x.n === n), k = kind(node);
         detail.style.setProperty('--dc', 'var(--jc)');
-        detail.innerHTML = `<p class="tkind">${k === 'sig' ? 'Signature skill' : k === 'cap' ? 'Capstone' : 'Node ' + node.n}</p><b>${esc(node.name)}</b><p>${esc(node.text)}</p>`;
+        detail.innerHTML = `<p class="tkind">${k === 'sig' ? 'Signature skill' : k === 'cap' ? 'Capstone' : 'Node ' + node.n}</p><b>${esc(node.name)}</b>${rich(node.text)}`;
       }
     }
     panel.querySelector('.tree').addEventListener('click', e => { const b = e.target.closest('.tnode'); if (b) pick(b.dataset.n === 'art' ? 'art' : +b.dataset.n); });
@@ -387,16 +398,17 @@ function skillsSection(skills, jobs) {
   const g = cardGrid({
     grid: $('#skill-grid'), count: $('#skill-count'), noun: 'skill', list: skills,
     match: s => (f.el === 'all' || s.element === f.el) && (f.kind === 'all' || s.kind.startsWith(f.kind)) &&
-      (!f.q || (s.name + ' ' + s.text + ' ' + s.tags.join(' ')).toLowerCase().includes(f.q)),
+      (!f.q || (s.name + ' ' + plainText(s.text) + ' ' + s.tags.join(' ')).toLowerCase().includes(f.q)),
     card: (s, i) => `<button type="button" class="card" data-i="${i}" data-frame="${s.kind === 'Signature' ? 'spike' : s.kind === 'Skill' ? 'notch' : 'silver'}" style="--c:${elColor(s.element)}">
-      <span class="card-top"><img src="${s.img}" alt="" loading="lazy"><span><b>${esc(s.name)}</b><small>${EL[s.element] || ''} · ${s.job ? jobName(s.job) : s.kind}</small></span></span>
-      <p>${esc(s.text)}</p></button>`,
+      <span class="card-top"><img src="${s.img}" alt="" loading="lazy"><span><b>${esc(s.name)}</b><small>${EL[s.element] || ''} · ${s.job ? jobName(s.job) : s.kind}${s.dlc ? ' · DLC' : ''}</small></span></span>
+      <p>${rich(s.text, true)}</p></button>`,
     detail: s => `<div style="--c:${elColor(s.element)}">
       <div class="d-head"><img src="${s.img}" alt=""><div><h3>${esc(s.name)}</h3><small style="color:var(--c);text-transform:uppercase;letter-spacing:.08em">${EL[s.element] || ''} ${esc(s.kind)}${s.job ? ' · ' + esc(jobName(s.job)) : ''}</small></div></div>
-      <p class="d-text">${esc(s.text)}</p>
+      ${s.dlc ? `<p class="d-note">Bloodmoon Realm pack${s.unlock ? ` · learned from Warden level ${s.unlock}` : ''}</p>` : ''}
+      <div class="d-text">${rich(s.text)}</div>
       <div class="d-tags"><span>Cost ${s.cost} Charge</span>${s.hits ? `<span>${s.hits} hit${s.hits > 1 ? 's' : ''}</span>` : ''}${s.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>
       ${s.talents.length ? `<div class="d-talents"><h4>Talents</h4><p class="d-note">Opened at skill level 4, 8, 12 and 15. Each ritual slot uses one of them, or none.</p>
-        ${s.talents.map((t, i) => `<div class="d-talent" style="--t:${TALENT_COLOR[i]}"><b><span>Lv ${t.level}</span>${esc(t.name)}<em>+${t.charge} Charge</em></b><p>${esc(t.text)}</p></div>`).join('')}</div>`
+        ${s.talents.map((t, i) => `<div class="d-talent" style="--t:${TALENT_COLOR[i]}"><b><span>Lv ${t.level}</span>${esc(t.name)}<em>+${t.charge} Charge</em></b>${rich(t.text)}</div>`).join('')}</div>`
         : `<p class="d-note">${s.kind === 'Signature' ? 'A Signature skill: the heart of its job, shaped by the job tree rather than talents.' : 'Rites have no talents: they shape the casts around them.'}</p>`}</div>`,
   });
   chips($('#skill-el'), [{ v: 'all', t: 'All elements' }, ...els.map(e => ({ v: e, t: EL[e], icon: `img/el/${e}.svg` }))], v => { f.el = v; g.reset(); });

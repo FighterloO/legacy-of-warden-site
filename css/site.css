@@ -589,3 +589,18 @@ body.bm-page .bd-shade{background:radial-gradient(ellipse at 50% 35%,rgba(50,6,1
 .to-top:hover{border-color:var(--gold)}
 .to-top i{width:9px;height:9px;border-left:2px solid var(--gold);border-top:2px solid var(--gold);transform:translateY(2px) rotate(45deg)}
 @media (max-width:600px){.to-top span{display:none}.to-top{padding:0}}
+
+/* The game's coloured words and points (RichWords, js/site.js rich()), 15 Nov 2026 */
+.rw-n{color:#f2cd6b;font-weight:600}
+.rw-fire{color:var(--fire)}.rw-ice{color:var(--ice)}.rw-lightning{color:var(--lightning)}.rw-chaos{color:var(--chaos)}.rw-physical{color:var(--physical)}
+.rw-note{color:var(--mute)}
+ul.rw{margin:6px 0 0;padding:0;list-style:none}
+ul.rw li{position:relative;padding-left:14px;line-height:1.5}
+ul.rw li+li{margin-top:3px}
+ul.rw li::before{content:"·";position:absolute;left:3px;top:0;color:var(--mute);font-weight:700}
+.d-talent ul.rw,.d-talent>p{margin-top:3px;font-size:14px}
+.tdetail ul.rw{font-size:14.5px}
+.tdetail .tshort{color:var(--ink);font-style:italic}
+.dlc-tag{margin-left:5px;padding:1px 4px;border-radius:3px;background:#7a1630;color:#ffd4dc;font:700 9px var(--sans);letter-spacing:.08em;vertical-align:super}
+.job-dlc{margin-top:8px;font-size:13px}
+.job-dlc a{color:#ff8fa8}

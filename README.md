@@ -28,16 +28,19 @@ python -m http.server 8765
 
 Then open http://localhost:8765/.
 
-## Update the skills, items and jobs
+## Update the skills and jobs
 
-When the game's skills, gear or jobs change, run the generator against the game repo (the web version's `src/game`):
+When the game's skills, talents or jobs change, run the generator against the game repo (it reads the Godot game's
+`godot/data/*.json` and the port's own words in `godot/scripts/core`, the Bloodmoon Realm pack included):
 
 ```
 node tools/build-data.cjs "D:/Github Project/legacy-of-warden"
 ```
 
-It rewrites `data/*.json`, copies the icons it needs into `img/` and deletes the icons that are no longer used. Then commit
-and push; Pages updates in a minute or two.
+It rewrites `data/skills.json`, `data/jobs.json` and the counts in `data/stats.json`, and copies any icon the site lacks
+from `godot/assets` (pictures it already has are kept). Texts keep the game's coloured words (`{n:…}`, `{fire:…}`,
+`{note:…}`, one point a line); `js/site.js` `rich()` draws them. `items.json`, `sets.json` and `planes.json` are not
+generated any more (the old web generator is gone): edit them by hand. Then commit and push; Pages updates in a minute or two.
 
 ## Other updates
 
